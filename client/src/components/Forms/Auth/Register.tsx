@@ -9,6 +9,7 @@ import { Alert, AlertDescription } from "../../ui/alert"
 import { Progress } from "../../ui/progress"
 import { Separator } from "../../ui/separator"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../ui/tooltip"
+import { axiosInstance } from "../../../api/axiosInstance"
 
 export default function Register() {
   const [username, setUsername] = useState("")

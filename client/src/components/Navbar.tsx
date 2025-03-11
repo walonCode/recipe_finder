@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
-import { Home, Search, BookOpen, PlusCircle, LogIn, UserCircle, LogOut, Menu, X } from "lucide-react"
+import { Home, Plus, BookOpen,  LogIn, UserCircle, LogOut, Menu, X } from "lucide-react"
 
 import {
   DropdownMenu,
@@ -17,12 +17,9 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   // Toggle login state (for demo purposes)
-  const toggleLogin = () => {
-    setIsLoggedIn(!isLoggedIn)
-  }
-
+  
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky mx-2 top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className=" flex h-16 mx-2 items-center justify-between">
         <div className="flex items-center gap-2">
           <Link to="/" className="flex items-center gap-2">
@@ -37,17 +34,13 @@ export default function Navbar() {
             <Home className="h-4 w-4" />
             Home
           </Link>
-          <Link to="/recipes" className="text-sm font-medium flex items-center gap-1 hover:text-primary">
+          <Link to="/add_food" className="text-sm font-medium flex items-center gap-1 hover:text-primary">
+            <Plus className="h-4 w-4" />
+            Add Recipe
+          </Link>
+          <Link to="/food" className="text-sm font-medium flex items-center gap-1 hover:text-primary">
             <BookOpen className="h-4 w-4" />
-            Recipes
-          </Link>
-          <Link to="/search" className="text-sm font-medium flex items-center gap-1 hover:text-primary">
-            <Search className="h-4 w-4" />
-            Search
-          </Link>
-          <Link to="/submit" className="text-sm font-medium flex items-center gap-1 hover:text-primary">
-            <PlusCircle className="h-4 w-4" />
-            Submit Recipe
+            View Recipe
           </Link>
         </nav>
 
@@ -55,11 +48,12 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-4">
           {!isLoggedIn ? (
             <>
-              <Button variant="outline" size="sm" onClick={toggleLogin}>
+              <Button variant="outline" size="sm">
+                <Link to="/login" className="flex items-center gap-2">
                 <LogIn className="h-4 w-4 mr-2" />
-                Log In
+                Login</Link>
               </Button>
-              <Button size="sm">Sign Up</Button>
+              <Button size="sm"><Link to='/register'>sign up</Link></Button>
             </>
           ) : (
             <div className="flex items-center gap-4">
@@ -74,13 +68,13 @@ export default function Navbar() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem>
-                    <UserCircle className="h-4 w-4 mr-2" />
-                    Profile
+                    <Link className="flex items-center gap-1" to='/profile'>
+                      <UserCircle className="h-4 w-4 mr-2" /> Profile</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>My Recipes</DropdownMenuItem>
-                  <DropdownMenuItem>Saved Recipes</DropdownMenuItem>
+                  {/* <DropdownMenuItem>My Recipes</DropdownMenuItem>
+                  <DropdownMenuItem>Saved Recipes</DropdownMenuItem> */}
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={toggleLogin}>
+                  <DropdownMenuItem >
                     <LogOut className="h-4 w-4 mr-2" />
                     Log Out
                   </DropdownMenuItem>
@@ -114,38 +108,33 @@ export default function Navbar() {
               Home
             </Link>
             <Link
-              to="/recipes"
+              to="/add_food"
+              className="flex items-center gap-2 p-2 rounded-md hover:bg-muted"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <Plus className="h-5 w-5" />
+              Add Recipe
+            </Link>
+            <Link
+              to="/food"
               className="flex items-center gap-2 p-2 rounded-md hover:bg-muted"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               <BookOpen className="h-5 w-5" />
-              Recipes
+              View Recipe
             </Link>
-            <Link
-              to="/search"
-              className="flex items-center gap-2 p-2 rounded-md hover:bg-muted"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              <Search className="h-5 w-5" />
-              Search
-            </Link>
-            <Link
-              to="/submit"
-              className="flex items-center gap-2 p-2 rounded-md hover:bg-muted"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              <PlusCircle className="h-5 w-5" />
-              Submit Recipe
-            </Link>
+           
 
             <div className="pt-2 border-t">
               {!isLoggedIn ? (
                 <div className="flex flex-col gap-2">
-                  <Button variant="outline" className="w-full justify-start" onClick={toggleLogin}>
+                  <Button variant="outline" className="w-full justify-start">
+                  <Link to='/login' className="flex items-center gap-2">
                     <LogIn className="h-5 w-5 mr-2" />
-                    Log In
+                    login</Link>
                   </Button>
-                  <Button className="w-full justify-start">Sign Up</Button>
+                  <Button className="w-full justify-start"><Link to='/register'>
+                  sign up</Link></Button>
                 </div>
               ) : (
                 <div className="flex flex-col gap-2">
@@ -156,7 +145,7 @@ export default function Navbar() {
                     </Avatar>
                     <span className="font-medium">My Account</span>
                   </div>
-                  <Button variant="destructive" className="w-full justify-start mt-2" onClick={toggleLogin}>
+                  <Button variant="destructive" className="w-full justify-start mt-2" >
                     <LogOut className="h-5 w-5 mr-2" />
                     Log Out
                   </Button>

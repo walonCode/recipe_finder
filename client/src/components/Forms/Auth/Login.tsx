@@ -7,6 +7,7 @@ import { Input } from "../../ui/input"
 import { Label } from "../../ui/label"
 import { Alert, AlertDescription } from "../../ui/alert"
 import { Checkbox } from "../../ui/checkbox"
+import { Separator } from "../../ui/separator"
 
 
 export default function Login() {
@@ -123,6 +124,15 @@ export default function Login() {
             {isLoading ? "Signing In..." : "Sign In"}
           </Button>
         </form>
+        
+        <Separator/>
+
+        <div className="text-center text-sm">
+          New here.... create an account?{" "}
+          <Link to="/register" className="font-medium text-primary hover:underline">
+            Sign up
+          </Link>
+        </div>
       </div>
     </div>
   )

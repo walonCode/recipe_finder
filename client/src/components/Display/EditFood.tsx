@@ -17,7 +17,7 @@ interface FoodData {
   ingredient: string[]
 }
 
-const EditFoodForm = () => {
+const EditFood = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const [food, setFood] = useState<FoodData | null>(null)
@@ -297,5 +297,5 @@ const EditFoodForm = () => {
   )
 }
 
-export default EditFoodForm
+export default EditFood
 
