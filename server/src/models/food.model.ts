@@ -5,7 +5,7 @@ interface Food extends Document {
     origin: string;
     ingredient: string[];
     steps: string[];
-    votings: string[];
+    votes: string[];
     ratings: string[];
     userId: string | undefined;
     username: string
@@ -28,7 +28,7 @@ const foodSchema = new Schema<Food>({
         type: Schema.Types.ObjectId,
         ref:"Step"
     }],
-    votings: [{
+    votes: [{
         type: Schema.Types.ObjectId,
         ref:"Voting"
     }],

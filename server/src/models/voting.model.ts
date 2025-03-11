@@ -4,6 +4,7 @@ interface Voting extends Document {
     foodId: string | undefined
     votesType: "like" | "dislike"
     userId: string | undefined
+    username: string
 }
 
 const votingSchema = new Schema<Voting>({
@@ -21,6 +22,10 @@ const votingSchema = new Schema<Voting>({
         ref: 'User',   
         required: true  
     },
+    username: {
+        type: String,
+        required: true
+    }
 },{ timestamps:true });
 
 const Voting = model('rating', votingSchema);

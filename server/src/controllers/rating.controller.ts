@@ -14,7 +14,7 @@ export const createRating = asyncHandler(async (req:AuthRequest, res:Response) =
     if (!result.success) {
         return errorHandler(res, 400, "Bad request", result.error)
     }
-    const { foodId, rating, username } = result.data
+    const { foodId, rating } = result.data
     const user = await User.findOne({ _id:userId })
     if (!user) {
         return errorHandler(res, 404, "User not found", null)
@@ -23,7 +23,13 @@ export const createRating = asyncHandler(async (req:AuthRequest, res:Response) =
     if (!food) {
         return errorHandler(res, 404, "Food not found", null)
     }
-    const newRating = new Rating({ foodId, rating, userId, username })
+
+    const existRating = await Rating.findOne({ foodId, userId })
+    if(existRating) {
+        return errorHandler(res, 409, "You have already rated this food", null)
+    }
+    
+    const newRating = new Rating({ foodId, rating, userId, username:user.username })
     const savedRating = await newRating.save()
 
     user.ratings.push(savedRating._id as string)
