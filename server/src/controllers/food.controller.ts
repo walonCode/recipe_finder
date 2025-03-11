@@ -74,19 +74,12 @@ export const getAllUserFoods = asyncHandler(async (req:AuthRequest, res:Response
 
 export const updateFood = asyncHandler(async (req:AuthRequest, res:Response) => {
     const { id } = req.params
-    const userId = req.user?.id
     const result = updateFoodSchema.safeParse(req.body)
     if (!result.success) {
         return errorHandler(res, 400, "Bad request", result.error)    
     }
 
     const { name, origin, ingredient } = result.data
-
-    const user = await User.findOne({ _id:userId })
-    if (!user) {
-        return errorHandler(res, 404, "User not found", null)
-    }
-
     const food = await Food.findById(id)
     if (!food) {    
         return errorHandler(res, 404, "Food not found", null)

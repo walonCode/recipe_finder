@@ -4,6 +4,8 @@ import connectDB from './configs/connectDB';
 import cors from 'cors';
 import corsOption from './configs/corsOption';
 import { errorMiddleware } from './middlewares/errorMiddleware';
+import { userRouter } from './routes/user.route';
+import { foodRouter } from './routes/food.route';
 
 config()
 
@@ -18,6 +20,11 @@ app.use(cors(corsOption))
 app.get('/', (req, res) => {
     res.send('Hello World!')
 })
+
+//auth route
+app.use('/api/v1/users',userRouter)
+//foood route
+app.use('/api/v1/foods',foodRouter)
 
 
 //error middleware

@@ -6,10 +6,11 @@ export interface AuthRequest extends Request{
     user?: {id:string} | JwtPayload
 }
 
-export const authMiddleware = (req:AuthRequest,res:Response,next:NextFunction) => {
+export const authMiddleware = (req:AuthRequest,res:Response,next:NextFunction):void => {
     const token = req.headers['authorization']
     if(!token){
-        return errorHandler(res, 401, 'Access denied', "token not found")
+        errorHandler(res, 401, 'Access denied', "token not found")
+        return
     }
     const tokenValue = token.replace('Bearer ', '').trim()
     try{
@@ -18,6 +19,7 @@ export const authMiddleware = (req:AuthRequest,res:Response,next:NextFunction) =
         next() 
     }catch(error){
         console.log(error)
-        return errorHandler(res, 401, 'Unauthorized',"invalid token")
+        errorHandler(res, 401, 'Unauthorized',"invalid token")
+        return
     }
 }
