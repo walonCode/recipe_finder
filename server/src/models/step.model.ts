@@ -2,7 +2,7 @@ import {model,Schema, Document} from 'mongoose';
 
 interface Step extends Document {
     foodId: string | undefined
-    step: string
+    step: string[]
     username:string,
     userId: string | undefined
 }
@@ -12,10 +12,10 @@ const stepsSchema = new Schema<Step>({
         type: Schema.Types.ObjectId,
         required:true
     },
-    step: {
+    step: [{
         type: String,
         required: true  
-    },
+    }],
     userId: {
         type: Schema.Types.ObjectId,
         ref: 'User',   
