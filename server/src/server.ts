@@ -14,6 +14,8 @@ config()
 
 const app = express()
 
+connectDB()
+
 //common middleware
 app.use(express.json())
 app.use(cors(corsOption))
