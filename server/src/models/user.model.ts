@@ -8,6 +8,8 @@ interface User extends Document {
     food: string[]
     votes: string[],
     ratings: string[]
+    bio: string
+    address:string
 }
 
 const userSchema = new Schema<User>({
@@ -19,6 +21,14 @@ const userSchema = new Schema<User>({
         type: String, 
         required: true,
         unique: true 
+    },
+    bio: {
+        type:String,
+        required:true
+    },
+    address:{
+        type:String,
+        required:true
     },
     password: { 
         type: String, 

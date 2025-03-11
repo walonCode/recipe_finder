@@ -39,7 +39,7 @@ export const register = asyncHandler(async (req, res) => {
         return errorHandler(res, 400, "Bad request", result.error)
     }    
 
-    const { fullname, username, password, email } = result.data 
+    const { fullname, username, password, email, bio, address } = result.data 
 
     const existingUser = await User.findOne({ username })    
     if (existingUser) {
@@ -47,7 +47,7 @@ export const register = asyncHandler(async (req, res) => {
     }               
 
     const hashedPassword = await bcrypt.hash(password, 10)
-    const newUser = new User({ fullname, username, password: hashedPassword, email })
+    const newUser = new User({ fullname, username, password: hashedPassword, email, bio, address })
     const savedUser = await newUser.save()
 
     const userResponse = savedUser.toObject() as Record<string, any>            
