@@ -4,6 +4,7 @@ interface Rating extends Document {
     foodId: string | undefined;
     rating: number;
     userId: string | undefined;
+    username: string
 }
 
 const ratingSchema = new Schema<Rating>({
@@ -22,6 +23,10 @@ const ratingSchema = new Schema<Rating>({
         ref: 'User',
         required: true  
     },
+    username: {
+        type: String,
+        required: true
+    }
 },{ timestamps:true });
 
 const Rating = model('rating', ratingSchema);

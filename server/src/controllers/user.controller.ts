@@ -29,7 +29,8 @@ export const login = asyncHandler(async (req:Request, res:Response) => {
 
     const userResponse = user.toObject() as Record<string, any>
     delete userResponse.password
-    return apiResponse(res, 200, "Login successful", { userResponse, accessToken })
+    const userToken = jwt.sign(userResponse,process.env.USER_TOKEN_SECRET!,{ expiresIn:'1d' })
+    return apiResponse(res, 200, "Login successful", { userToken, accessToken })
 })                                                        
 
 export const register = asyncHandler(async (req, res) => {
@@ -49,9 +50,7 @@ export const register = asyncHandler(async (req, res) => {
     const newUser = new User({ fullname, username, password: hashedPassword, email })
     const savedUser = await newUser.save()
 
-    const accessToken = jwt.sign({ id: savedUser._id }, process.env.ACCESS_TOKEN_SECRET!, { expiresIn: '1d' })               
-
     const userResponse = savedUser.toObject() as Record<string, any>            
     delete userResponse.password
-    return apiResponse(res, 201, "User registered successfully", { userResponse, accessToken })    
+    return apiResponse(res, 201, "User registered successfully", { userResponse })    
 })

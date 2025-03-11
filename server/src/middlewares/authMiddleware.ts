@@ -2,8 +2,8 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Request, Response, NextFunction } from "express"
 import { errorHandler} from '../helpers/errorHandler'
 
-interface AuthRequest extends Request{
-    user?: string | JwtPayload
+export interface AuthRequest extends Request{
+    user?: {id:string} | JwtPayload
 }
 
 export const authMiddleware = (req:AuthRequest,res:Response,next:NextFunction) => {
@@ -14,7 +14,7 @@ export const authMiddleware = (req:AuthRequest,res:Response,next:NextFunction) =
     const tokenValue = token.replace('Bearer ', '').trim()
     try{
         const decoded = jwt.verify(tokenValue, process.env.ACCESS_TOKEN_SECRET!) as JwtPayload
-        req.user = decoded
+        req.user = decoded as {id: string}
         next() 
     }catch(error){
         console.log(error)
