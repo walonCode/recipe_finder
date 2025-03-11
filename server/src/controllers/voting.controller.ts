@@ -8,7 +8,7 @@ import Food from "../models/food.model";
 import Voting from "../models/voting.model";
 import { createVoteSchema } from "../validators/vote.validator";
 
-export const createVoting = asyncHandler(async (req:AuthRequest, res:Response) => {
+export const createVote = asyncHandler(async (req:AuthRequest, res:Response) => {
     const result = createVoteSchema.safeParse(req.body)
     if (!result.success) {
         return errorHandler(res, 400, "Bad request", result.error)
@@ -38,7 +38,7 @@ export const createVoting = asyncHandler(async (req:AuthRequest, res:Response) =
     return apiResponse(res, 200, "Voting created successfully", savedVoting)
 })
 
-export const deleteVoting = asyncHandler(async (req:AuthRequest, res:Response) => {
+export const deleteVote = asyncHandler(async (req:AuthRequest, res:Response) => {
     const { id } = req.params
     const userId = req.user?.id
     const voting = await Voting.findByIdAndDelete(id)
@@ -50,7 +50,7 @@ export const deleteVoting = asyncHandler(async (req:AuthRequest, res:Response) =
     return apiResponse(res, 200, "Voting deleted successfully", id)
 })
 
-export const getAllUserVoting = asyncHandler(async(req:AuthRequest,res) => {
+export const getAllUserVote = asyncHandler(async(req:AuthRequest,res) => {
     const userId = req.user?.id
     const userVoting = await Voting.find({ userId })
     if (userVoting.length === 0) {
@@ -59,7 +59,7 @@ export const getAllUserVoting = asyncHandler(async(req:AuthRequest,res) => {
     return apiResponse(res, 200, "Voting fetched successfully", userVoting)
 })
 
-export const getAllFoodVoting = asyncHandler(async(req,res) => {
+export const getAllFoodVote = asyncHandler(async(req,res) => {
     const { foodId } = req.params
     const foodVoting = await Voting.find({ foodId })
     if (foodVoting.length === 0) {

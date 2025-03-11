@@ -1,4 +1,4 @@
-import {model, Schema, Document} from 'mongoose';
+import {models, model, Schema, Document} from 'mongoose';
 
 interface Rating extends Document {
     foodId: string | undefined;
@@ -29,6 +29,6 @@ const ratingSchema = new Schema<Rating>({
     }
 },{ timestamps:true });
 
-const Rating = model('rating', ratingSchema);
+const Rating = models.rating || model<Rating>('rating', ratingSchema);
 
 export default Rating

@@ -6,6 +6,9 @@ import corsOption from './configs/corsOption';
 import { errorMiddleware } from './middlewares/errorMiddleware';
 import { userRouter } from './routes/user.route';
 import { foodRouter } from './routes/food.route';
+import { voteRouter } from './routes/voting.route';
+import { ratingRouter } from './routes/rating.route';
+import { stepRouter } from './routes/step.route';
 
 config()
 
@@ -25,6 +28,12 @@ app.get('/', (req, res) => {
 app.use('/api/v1/users',userRouter)
 //foood route
 app.use('/api/v1/foods',foodRouter)
+//voting route
+app.use('/api/v1/votes',voteRouter)
+//rating route
+app.use('/api/v1/rating',ratingRouter)
+//step route
+app.use('/api/v1/step',stepRouter)
 
 
 //error middleware
