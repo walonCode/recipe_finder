@@ -5,78 +5,36 @@ import { Button } from "../../ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../ui/card"
 import { Alert, AlertDescription } from "../../ui/alert"
 import { Progress } from "../../ui/progress"
+import { addVote, getAllFoodVote } from "../../../store/features/voting/votingSlice"
+import { addRating,getAllFoodRating } from "../../../store/features/rating/ratingSlice"
+import { useAppDispatch } from "../../../hooks/storeHook"
 
 
-interface RatingStats {
-  averageRating: number
-  totalRatings: number
-  ratingCounts: { [key: number]: number }
-}
 
-interface VotingStats {
-  likes: number
-  dislikes: number
-}
 
-const RatingAndVotingForm = () => {
-  const [userRating, setUserRating] = useState<number | null>(null)
+const RatingAndVotingForm = ({foodId}:{foodId:string}) => {
+  const [userRating, setUserRating] = useState(null)
   const [userVote, setUserVote] = useState<"like" | "dislike" | null>(null)
-  const [ratingStats, setRatingStats] = useState<RatingStats | null>(null)
-  const [votingStats, setVotingStats] = useState<VotingStats | null>(null)
+  const [ratingStats, setRatingStats] = useState(null)
+  const [votingStats, setVotingStats] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
 
+  const dispatch = useAppDispatch()
 
-  const foodId = ""
-  const userId = ""
-  const username = ""
 
-  useEffect(() => {
-    fetchRatingAndVotingStats()
-    fetchUserRatingAndVote()
-  }, [foodId, userId])
-
-  const fetchRatingAndVotingStats = async () => {
-    try {
-      const [ratingResponse, votingResponse] = await Promise.all([
-        axios.get(`http://localhost:5000/api/ratings/stats/${foodId}`),
-        axios.get(`http://localhost:5000/api/voting/stats/${foodId}`),
-      ])
-      setRatingStats(ratingResponse.data)
-      setVotingStats(votingResponse.data)
-    } catch (error) {
-      console.error("Error fetching stats:", error)
-    }
-  }
-
-  const fetchUserRatingAndVote = async () => {
-    try {
-      const [ratingResponse, votingResponse] = await Promise.all([
-        axios.get(`http://localhost:5000/api/ratings/user/${foodId}/${userId}`),
-        axios.get(`http://localhost:5000/api/voting/user/${foodId}/${userId}`),
-      ])
-      setUserRating(ratingResponse.data.rating)
-      setUserVote(votingResponse.data.votesType)
-    } catch (error) {
-      console.error("Error fetching user rating and vote:", error)
-    }
-  }
-
+ 
   const handleRating = async (rating: number) => {
     setIsLoading(true)
     setError("")
     setSuccess("")
     try {
-      await axios.post("http://localhost:5000/api/ratings", {
-        foodId,
-        rating,
-        userId,
-        username,
-      })
-      setUserRating(rating)
-      setSuccess("Rating submitted successfully!")
-      fetchRatingAndVotingStats()
+      const action = await dispatch(addRating({foodId,rating}))
+      if(addRating.fulfilled.match(action)){
+        setSuccess("Rating submitted successfully!")
+        await dispatch(getAllFoodRating(foodId))
+      }
     } catch (error) {
       setError("Error submitting rating. Please try again.")
       console.error("Error submitting rating:", error)
@@ -90,15 +48,11 @@ const RatingAndVotingForm = () => {
     setError("")
     setSuccess("")
     try {
-      await axios.post("http://localhost:5000/api/voting", {
-        foodId,
-        votesType: voteType,
-        userId,
-        username,
-      })
-      setUserVote(voteType)
-      setSuccess("Vote submitted successfully!")
-      fetchRatingAndVotingStats()
+      const action = await dispatch(addVote({foodId,voteType}))
+      if(addVote.fulfilled.match(action)){
+        setSuccess("Vote submitted successfully!")
+        await dispatch(getAllFoodVote(foodId))
+      }
     } catch (error) {
       setError("Error submitting vote. Please try again.")
       console.error("Error submitting vote:", error)

@@ -1,9 +1,5 @@
-"use client"
-
 import type React from "react"
-
 import { useState } from "react"
-import axios from "axios"
 import { Plus, Minus, List } from "lucide-react"
 import { Button } from "../../ui/button"
 import { Input } from "../../ui/input"
@@ -17,36 +13,37 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../../ui/dialog"
+import { addStep,getAllSteps } from "../../../store/features/step/stepSlice"
+import { useAppDispatch } from "../../../hooks/storeHook"
 
-
-const AddStep = () => {
-  const [steps, setSteps] = useState<string[]>([""])
+const AddStep = ({foodId}:{foodId:string}) => {
+  const [step, setStep] = useState<string[]>([""])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
 
+  const dispatch = useAppDispatch()
+
   const handleStepChange = (index: number, value: string) => {
-    const newSteps = [...steps]
+    const newSteps = [...step]
     newSteps[index] = value
-    setSteps(newSteps)
+    setStep(newSteps)
   }
 
-  const foodId = ""
-  const userId = ""
-  const username = ""
+
   const [isOpen,setIsOpen] = useState(true)
   const onClose = () => {
     setIsOpen(!isOpen)
   }
 
-  const addStep = () => {
-    setSteps([...steps, ""])
+  const addStepField = () => {
+    setStep([...step, ""])
   }
 
   const removeStep = (index: number) => {
-    if (steps.length > 1) {
-      const newSteps = steps.filter((_, i) => i !== index)
-      setSteps(newSteps)
+    if (step.length > 1) {
+      const newSteps = step.filter((_, i) => i !== index)
+      setStep(newSteps)
     }
   }
 
@@ -57,20 +54,12 @@ const AddStep = () => {
     setSuccess("")
 
     try {
-      const response = await axios.post("http://localhost:5000/api/steps", {
-        foodId,
-        step: steps.filter((step) => step.trim() !== ""), // Remove empty steps
-        userId,
-        username,
-      })
-      setSuccess("Steps added successfully!")
-      console.log("Steps added:", response.data)
-      // Reset form
-      setSteps([""])
-      // Close modal after a short delay
-      setTimeout(() => {
+      const action = await dispatch(addStep({step,foodId}))
+      if(addStep.fulfilled.match(action)){
+        setSuccess("Steps added successfully")
+        await dispatch(getAllSteps())
         onClose()
-      }, 2000)
+      }
     } catch (error) {
       setError("Error adding steps. Please try again.")
       console.error("Error adding steps:", error)
@@ -88,7 +77,7 @@ const AddStep = () => {
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
-            {steps.map((step, index) => (
+            {step.map((step, index) => (
               <div key={index} className="flex items-center gap-2">
                 <Label htmlFor={`step-${index}`} className="sr-only">
                   Step {index + 1}
@@ -108,13 +97,13 @@ const AddStep = () => {
                   variant="outline"
                   size="icon"
                   onClick={() => removeStep(index)}
-                  disabled={steps.length === 1}
+                  disabled={step.length === 1}
                 >
                   <Minus className="h-4 w-4" />
                 </Button>
               </div>
             ))}
-            <Button type="button" variant="outline" onClick={addStep} className="w-full">
+            <Button type="button" variant="outline" onClick={addStepField} className="w-full">
               <Plus className="h-4 w-4 mr-2" /> Add Step
             </Button>
           </div>

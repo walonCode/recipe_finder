@@ -40,9 +40,8 @@ export const deleteStep = asyncHandler(async (req:Request, res:Response) => {
     return apiResponse(res, 200, "Step deleted successfully", id)
 })
 
-export const getAllFoodSteps = asyncHandler(async(req:Request,res:Response) => {
-    const { foodId } = req.params
-    const foodSteps = await Step.find({ foodId })
+export const getAllSteps = asyncHandler(async(req:Request,res:Response) => {
+    const foodSteps = await Step.find({})
     if (foodSteps.length === 0) {
         return apiResponse(res, 200, "No steps for this food", null)
     }

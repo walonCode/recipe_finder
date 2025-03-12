@@ -28,9 +28,9 @@ export const addStep = createAsyncThunk('step/addStep', async (data:AddStep,{ re
     }
 })
 
-export const getAllFoodSteps = createAsyncThunk('step/getAllFoodSteps', async (foodId:string,{ rejectWithValue }) => {
+export const getAllSteps = createAsyncThunk('step/getAllFoodSteps', async (_,{ rejectWithValue }) => {
     try{
-        const response = await axiosInstance.get(`/steps/food/${foodId}`)
+        const response = await axiosInstance.get('/steps')
         return response.data as Step[]
     }catch(error){
         console.error(error)
@@ -60,14 +60,14 @@ const stepSlice = createSlice({
             state.status = "failed"
             state.error = action.payload as string
         })
-        .addCase(getAllFoodSteps.pending, (state ) => {
+        .addCase(getAllSteps.pending, (state ) => {
             state.status = "loading"
             state.error = null
         })
-        .addCase(getAllFoodSteps.fulfilled, (state,action) => {
+        .addCase(getAllSteps.fulfilled, (state,action) => {
             stepAdaptor.setAll(state, action.payload)
         })
-        .addCase(getAllFoodSteps.rejected, (state,action) => {
+        .addCase(getAllSteps.rejected, (state,action) => {
             state.status = "failed"
             state.error = action.payload as string
         })

@@ -6,8 +6,9 @@ import { Input } from "../../ui/input"
 import { Label } from "../../ui/label"
 import { Alert, AlertDescription } from "../../ui/alert"
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "../../ui/card"
-import { axiosInstance } from "../../../api/axiosInstance"
 import { useNavigate } from "react-router-dom"
+import { addFood,getAllFood } from "../../../store/features/food/foodSlice"
+import { useAppDispatch } from "../../../hooks/storeHook"
 
 const AddFoodForm = () => {
   const [name, setName] = useState("")
@@ -16,6 +17,8 @@ const AddFoodForm = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
+
+  const dispatch = useAppDispatch()
 
   const navigate = useNavigate()
 
@@ -40,17 +43,12 @@ const AddFoodForm = () => {
     e.preventDefault()
     try{
       setIsLoading(true)
-      const response = await axiosInstance.post("/food",{
-        name,
-        origin,
-        ingredients 
-      })
-      if(response.status === 200){
+      const action = await dispatch(addFood({name,origin,ingredients}))
+      if(addFood.fulfilled.match(action)){
         navigate('/food')
         setSuccess("Food added successfully")
-        console.log(response.data)
+        await dispatch(getAllFood())
       }
-
     }catch(error){
       console.error(error)
       setError("Adding food failed")
