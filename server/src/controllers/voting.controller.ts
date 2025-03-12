@@ -59,9 +59,8 @@ export const getAllUserVote = asyncHandler(async(req:AuthRequest,res) => {
     return apiResponse(res, 200, "Voting fetched successfully", userVoting)
 })
 
-export const getAllFoodVote = asyncHandler(async(req,res) => {
-    const { foodId } = req.params
-    const foodVoting = await Voting.find({ foodId })
+export const getAllVote = asyncHandler(async(req,res) => {
+    const foodVoting = await Voting.find({})
     if (foodVoting.length === 0) {
         return apiResponse(res, 200, "No voting for this food", null)
     }

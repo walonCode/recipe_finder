@@ -53,9 +53,8 @@ export const deleteRating = asyncHandler(async (req:AuthRequest, res:Response) =
     return apiResponse(res, 200, "Rating deleted successfully", id)
 })
 
-export const getAllFoodRating = asyncHandler(async(req,res) => {
-    const { foodId } = req.params
-    const foodRating = await Rating.find({ foodId })
+export const getAllRating = asyncHandler(async(req,res) => {
+    const foodRating = await Rating.find({})
     if (foodRating.length === 0) {
         return apiResponse(res, 200, "No ratings for this food", null)
     }

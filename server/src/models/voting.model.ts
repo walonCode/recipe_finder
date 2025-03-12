@@ -10,11 +10,12 @@ interface Voting extends Document {
 const votingSchema = new Schema<Voting>({
     foodId: {
         type: Schema.Types.ObjectId,
+        ref: "Food",
         required:true
     },
     votesType: {
         type: String,
-        enum: ['like', 'dislike'],
+        enum: ["like", "dislike"],
         required: true  
     },
     userId: {
@@ -28,6 +29,6 @@ const votingSchema = new Schema<Voting>({
     }
 },{ timestamps:true });
 
-const Voting = model('rating', votingSchema);
+const Voting = model('voting', votingSchema);
 
 export default Voting

@@ -5,8 +5,8 @@ import { Button } from "../../ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../ui/card"
 import { Alert, AlertDescription } from "../../ui/alert"
 import { Progress } from "../../ui/progress"
-import { addVote, getAllFoodVote } from "../../../store/features/voting/votingSlice"
-import { addRating,getAllFoodRating } from "../../../store/features/rating/ratingSlice"
+import { addVote, getTotalVote } from "../../../store/features/voting/votingSlice"
+import { addRating,getAllRating } from "../../../store/features/rating/ratingSlice"
 import { useAppDispatch } from "../../../hooks/storeHook"
 
 
@@ -33,7 +33,7 @@ const RatingAndVotingForm = ({foodId}:{foodId:string}) => {
       const action = await dispatch(addRating({foodId,rating}))
       if(addRating.fulfilled.match(action)){
         setSuccess("Rating submitted successfully!")
-        await dispatch(getAllFoodRating(foodId))
+        await dispatch(getAllRating())
       }
     } catch (error) {
       setError("Error submitting rating. Please try again.")
@@ -51,7 +51,7 @@ const RatingAndVotingForm = ({foodId}:{foodId:string}) => {
       const action = await dispatch(addVote({foodId,voteType}))
       if(addVote.fulfilled.match(action)){
         setSuccess("Vote submitted successfully!")
-        await dispatch(getAllFoodVote(foodId))
+        await dispatch(getTotalVote())
       }
     } catch (error) {
       setError("Error submitting vote. Please try again.")

@@ -10,6 +10,7 @@ interface Rating extends Document {
 const ratingSchema = new Schema<Rating>({
     foodId: {
         type: Schema.Types.ObjectId,
+        ref: "Food",
         required:true
     },
     rating: {

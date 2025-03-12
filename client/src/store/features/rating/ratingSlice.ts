@@ -28,9 +28,9 @@ export const addRating = createAsyncThunk('rating/addRating', async (data:AddRat
     }
 })
 
-export const getAllFoodRating = createAsyncThunk('rating/getAllFoodRating', async (foodId:string,{ rejectWithValue }) => {
+export const getAllRating = createAsyncThunk('rating/getAllFoodRating', async (_,{ rejectWithValue }) => {
     try{
-        const response = await axiosInstance.get(`/ratings/food/${foodId}`)
+        const response = await axiosInstance.get(`/ratings`)
         return response.data as Rating[]
     }catch(error){
         console.error(error)
@@ -60,14 +60,14 @@ const ratingSlice = createSlice({
             state.status = "failed"
             state.error = action.payload as string
         })
-        .addCase(getAllFoodRating.pending, (state ) => {
+        .addCase(getAllRating.pending, (state ) => {
             state.status = "loading"
             state.error = null
         })
-        .addCase(getAllFoodRating.fulfilled, (state,action) => {
+        .addCase(getAllRating.fulfilled, (state,action) => {
             ratingAdaptor.setAll(state, action.payload)
         })
-        .addCase(getAllFoodRating.rejected, (state,action) => {
+        .addCase(getAllRating.rejected, (state,action) => {
             state.status = "failed"
             state.error = action.payload as string
         })

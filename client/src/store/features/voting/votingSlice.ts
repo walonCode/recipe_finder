@@ -29,9 +29,9 @@ export const addVote = createAsyncThunk('vote/addVote', async (data:AddVote,{ re
     }   
 })
 
-export const getAllFoodVote = createAsyncThunk('vote/getAllFoodVote', async (foodId:string,{ rejectWithValue }) => {
+export const getTotalVote = createAsyncThunk('vote/getAllFoodVote', async (_,{ rejectWithValue }) => {
     try{
-        const response = await axiosInstance.get(`/votes/food/${foodId}`)
+        const response = await axiosInstance.get(`/votes`)
         return response.data as Vote[]
     }catch(error){
         console.error(error)
@@ -58,7 +58,7 @@ const voteSlice = createSlice({
             .addCase(addVote.fulfilled,(state,action) => {
                 voteAdaptor.addOne(state,action.payload)
             })
-            .addCase(getAllFoodVote.fulfilled,(state,action) => {
+            .addCase(getTotalVote.fulfilled,(state,action) => {
                 voteAdaptor.setAll(state,action.payload)
             })
             .addCase(deleteVote.fulfilled,(state,action) => {

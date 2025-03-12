@@ -10,6 +10,7 @@ interface Step extends Document {
 const stepsSchema = new Schema<Step>({
     foodId: {
         type: Schema.Types.ObjectId,
+        ref:"Food",
         required:true
     },
     step: [{
