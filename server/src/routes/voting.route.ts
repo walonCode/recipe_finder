@@ -4,7 +4,7 @@ import { createVote, getAllUserVote, getAllFoodVote, deleteVote } from "../contr
 
 export const voteRouter = Router()
 
-voteRouter.route('/create').post(authMiddleware, createVote)
+voteRouter.route('/').post(authMiddleware, createVote)
 voteRouter.route('/user').get(authMiddleware,getAllUserVote)
 voteRouter.route('/food/:foodId').get(getAllFoodVote)
-voteRouter.route('/delete/:id').delete(authMiddleware,deleteVote)
+voteRouter.route('/:id').delete(authMiddleware,deleteVote)

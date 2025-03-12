@@ -8,60 +8,13 @@ import { Button } from "../../ui/button"
 import { ScrollArea } from "../../ui/scroll-area"
 import Cookies from "js-cookie"
 import { jwtDecode } from "jwt-decode"
+import { Food, Rating, User, Vote } from "../../../lib/types"
 
-interface UserData {
-  _id: string
-  username: string
-  email: string
-  location?: string
-  bio?: string
-  avatarUrl?: string
-  joinDate: string
-  stats: {
-    totalFoods: number
-    totalRatings: number
-    totalVotes: number
-  }
-}
 
-interface Food {
-  _id: string
-  name: string
-  origin: string
-  ingredient: string[]
-  createdAt: string
-  ratings: { average: number; count: number }
-  votes: { like: number; dislike: number }
-}
 
-interface Rating {
-  _id: string
-  foodId: string
-  foodName: string
-  rating: number
-  createdAt: string
-}
 
-interface Vote {
-  _id: string
-  foodId: string
-  foodName: string
-  votesType: "like" | "dislike"
-  createdAt: string
-}
 
-interface User {
-  _id:string,
-  address:string,
-  bio:string,
-  fullname:string,
-  username: string,
-  email:string,
-  food:string[],
-  rating:string[]
-  votes:string[]
-  createdAt: string
-}
+
 
 const Profile = () => {
   const [foods, setFoods] = useState<Food[]>([])

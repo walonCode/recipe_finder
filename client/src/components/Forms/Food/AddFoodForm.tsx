@@ -1,12 +1,13 @@
 import type React from "react"
 import { useState } from "react"
-import axios from "axios"
 import { Plus, Minus, Utensils, MapPin, List } from "lucide-react"
 import { Button } from "../../ui/button"
 import { Input } from "../../ui/input"
 import { Label } from "../../ui/label"
 import { Alert, AlertDescription } from "../../ui/alert"
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "../../ui/card"
+import { axiosInstance } from "../../../api/axiosInstance"
+import { useNavigate } from "react-router-dom"
 
 const AddFoodForm = () => {
   const [name, setName] = useState("")
@@ -15,6 +16,8 @@ const AddFoodForm = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
+
+  const navigate = useNavigate()
 
   const handleIngredientChange = (index: number, value: string) => {
     const newIngredients = [...ingredients]
@@ -35,26 +38,23 @@ const AddFoodForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsLoading(true)
-    setError("")
-    setSuccess("")
-
-    try {
-      const response = await axios.post("http://localhost:5000/api/foods", {
+    try{
+      setIsLoading(true)
+      const response = await axiosInstance.post("/food",{
         name,
         origin,
-        ingredient: ingredients.filter((ing) => ing.trim() !== ""), // Remove empty ingredients
+        ingredients 
       })
-      setSuccess("Food added successfully!")
-      console.log("Food added:", response.data)
-      // Reset form
-      setName("")
-      setOrigin("")
-      setIngredients([""])
-    } catch (error) {
-      setError("Error adding food. Please try again.")
-      console.error("Error adding food:", error)
-    } finally {
+      if(response.status === 200){
+        navigate('/food')
+        setSuccess("Food added successfully")
+        console.log(response.data)
+      }
+
+    }catch(error){
+      console.error(error)
+      setError("Adding food failed")
+    }finally{
       setIsLoading(false)
     }
   }

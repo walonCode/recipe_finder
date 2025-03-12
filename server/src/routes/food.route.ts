@@ -7,8 +7,6 @@ export const foodRouter = Router()
 
 
 
-foodRouter.route('/create').post(authMiddleware,createFood)
-foodRouter.route('/').get(getAllFoods)
+foodRouter.route('/').post(authMiddleware,createFood).get(getAllFoods)
 foodRouter.route('/user').get(authMiddleware,getAllUserFoods)
-foodRouter.route('/delete/:id').delete(authMiddleware,deleteFood)
-foodRouter.route('/update/:id').patch(updateFood)
+foodRouter.route('/:id').delete(authMiddleware,deleteFood).patch(updateFood)

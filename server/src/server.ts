@@ -33,9 +33,9 @@ app.use('/api/v1/foods',foodRouter)
 //voting route
 app.use('/api/v1/votes',voteRouter)
 //rating route
-app.use('/api/v1/rating',ratingRouter)
+app.use('/api/v1/ratings',ratingRouter)
 //step route
-app.use('/api/v1/step',stepRouter)
+app.use('/api/v1/steps',stepRouter)
 
 
 //error middleware

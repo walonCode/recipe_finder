@@ -4,6 +4,6 @@ import { createStep, deleteStep, getAllFoodSteps } from "../controllers/step.con
 
 export const stepRouter = Router()
 
-stepRouter.route('/create').post(authMiddleware, createStep)
+stepRouter.route('/').post(authMiddleware, createStep)
 stepRouter.route('/food/:foodId').get(getAllFoodSteps)
-stepRouter.route('/delete/:id').delete(deleteStep)
+stepRouter.route('/:id').delete(deleteStep)
