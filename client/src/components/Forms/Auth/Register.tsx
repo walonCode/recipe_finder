@@ -1,7 +1,7 @@
 import type React from "react"
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { Eye, EyeOff, User, Mail, Lock, CheckCircle, XCircle } from "lucide-react"
+import { Eye, EyeOff, User, Mail, Lock, CheckCircle, XCircle,Map } from "lucide-react"
 import { Button } from "../../ui/button"
 import { Input } from "../../ui/input"
 import { Label } from "../../ui/label"
@@ -9,42 +9,50 @@ import { Alert, AlertDescription } from "../../ui/alert"
 import { Progress } from "../../ui/progress"
 import { Separator } from "../../ui/separator"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../ui/tooltip"
+import { Textarea } from "../../ui/textarea"
 import { axiosInstance } from "../../../api/axiosInstance"
+import useAuthRedirect from "../../../hooks/useAuthRedirect"
+
 
 export default function Register() {
   const [username, setUsername] = useState("")
   const [fullname, setFullname] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [bio, setBio] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
+  const [address, setAddress] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
   const navigate = useNavigate()
 
+  useAuthRedirect()
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (fullname && username && email && password && confirmPassword) {
-      if (password !== confirmPassword) {
-        setError("Passwords do not match.")
-        return
-      }
+    try{
       setIsLoading(true)
-      setError("")
-      try {
-        // Simulating an API call
-        await new Promise((resolve) => setTimeout(resolve, 1500))
-        console.log("Registration attempt with:", { fullname, username, email, password })
-        navigate("/login")
-      } catch (err) {
-        console.error(err)
-        setError("An error occurred during registration. Please try again.")
-      } finally {
-        setIsLoading(false)
+      if(password === confirmPassword){
+        const response = await axiosInstance.post("/users/register", {
+          username,
+          fullname,
+          email,
+          password,
+          bio,
+          address
+        })
+        if(response.status === 201){
+          navigate("/login")
+          console.log(response.data)
+        }
       }
-    } else {
-      setError("Please fill in all fields.")
+    }catch(error){
+      console.error(error)
+      setError("An error occurred during registration. Please try again.")
+    }finally{
+      setIsLoading(false)
     }
   }
 
@@ -133,6 +141,20 @@ export default function Register() {
             </div>
           </div>
           <div className="space-y-2">
+            <Label htmlFor="bio">Bio</Label>
+            <div className="relative flex items-center justify-center">
+              <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
+              <Textarea
+                id="bio"
+                placeholder="Tell us a bit about yourself"
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
+                className="pl-10 "
+                required
+              />
+            </div>
+          </div>
+          <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
@@ -142,6 +164,20 @@ export default function Register() {
                 placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                className="pl-10"
+                required
+              />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="address">Address</Label>
+            <div className="relative">
+              <Map className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
+              <Input
+                id="address"
+                placeholder="123 Main St"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
                 className="pl-10"
                 required
               />

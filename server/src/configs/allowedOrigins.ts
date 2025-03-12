@@ -1,1 +1,1 @@
-export const allowedOrigin:string[] = ['http://localhost:5173/']
+export const allowedOrigin:string[] = ['http://localhost:5173']

@@ -11,15 +11,41 @@ import {
 } from "./ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 import { Button } from "./ui/button"
+import Cookies from "js-cookie"
+import { jwtDecode } from "jwt-decode"
 
 export default function Navbar() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  let isLoggedIn;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   // Toggle login state (for demo purposes)
+
+  if(Cookies.get("accessToken")){
+    isLoggedIn = true
+  }
+
+  const token = Cookies.get("userToken");
+  let user
+  if (token) {
+    try {
+      user = jwtDecode(token) as { username: string };
+    } catch (error) {
+      console.error("Invalid token:", error);
+    }
+  } else {
+    console.warn("No token found in cookies.");
+  }
+
+
+  const handleLogout = () => {
+    // Perform logout logic here
+    Cookies.remove("accessToken")
+    Cookies.remove("userToken")
+    window.location.href = "/login"
+  }
   
   return (
-    <header className="sticky mx-2 top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky mx-auto top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className=" flex h-16 mx-2 items-center justify-between">
         <div className="flex items-center gap-2">
           <Link to="/" className="flex items-center gap-2">
@@ -62,7 +88,7 @@ export default function Navbar() {
                   <Button variant="ghost" size="icon" className="rounded-full">
                     <Avatar>
                       <AvatarImage src="/placeholder.svg" alt="User" />
-                      <AvatarFallback>SC</AvatarFallback>
+                      <AvatarFallback>{user?.username.substring(0,2).toUpperCase()}</AvatarFallback>
                     </Avatar>
                   </Button>
                 </DropdownMenuTrigger>
@@ -71,10 +97,8 @@ export default function Navbar() {
                     <Link className="flex items-center gap-1" to='/profile'>
                       <UserCircle className="h-4 w-4 mr-2" /> Profile</Link>
                   </DropdownMenuItem>
-                  {/* <DropdownMenuItem>My Recipes</DropdownMenuItem>
-                  <DropdownMenuItem>Saved Recipes</DropdownMenuItem> */}
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem >
+                  <DropdownMenuItem onClick={handleLogout}>
                     <LogOut className="h-4 w-4 mr-2" />
                     Log Out
                   </DropdownMenuItem>
@@ -141,11 +165,11 @@ export default function Navbar() {
                   <div className="flex items-center gap-2 p-2">
                     <Avatar className="h-8 w-8">
                       <AvatarImage src="/placeholder.svg" alt="User" />
-                      <AvatarFallback>SC</AvatarFallback>
+                      <AvatarFallback>{user?.username.substring(0,2).toUpperCase()}</AvatarFallback>
                     </Avatar>
-                    <span className="font-medium">My Account</span>
+                    <span className="font-medium"><Link to='/profile'>My Account</Link></span>
                   </div>
-                  <Button variant="destructive" className="w-full justify-start mt-2" >
+                  <Button variant="destructive" className="w-full justify-start mt-2" onClick={handleLogout} >
                     <LogOut className="h-5 w-5 mr-2" />
                     Log Out
                   </Button>

@@ -8,36 +8,39 @@ import { Label } from "../../ui/label"
 import { Alert, AlertDescription } from "../../ui/alert"
 import { Checkbox } from "../../ui/checkbox"
 import { Separator } from "../../ui/separator"
+import Cookies from "js-cookie"
+import { axiosInstance } from "../../../api/axiosInstance"
+import useAuthRedirect from "../../../hooks/useAuthRedirect"
 
 
 export default function Login() {
-  const [email, setEmail] = useState("")
+  const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [rememberMe, setRememberMe] = useState(false)
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
+  useAuthRedirect()
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (email && password) {
-      setIsLoading(true)
-      setError("")
-      try {
-        // Simulating an API call
-        await new Promise((resolve) => setTimeout(resolve, 1500))
-        console.log("Login attempt with:", { email, password, rememberMe })
-        navigate("/")
-      } catch (err) {
-        console.error(err)
-        setError("An error occurred during login. Please try again.")
-      } finally {
-        setIsLoading(false)
-      }
-    } else {
-      setError("Please enter both email and password.")
+   try{
+    setIsLoading(true)
+    const response = await axiosInstance.post('/users/login',{username,password})
+    if(response.status === 200){
+      console.log(response.data.data.userToken)
+      Cookies.set("accessToken", response.data.data.accessToken)
+      Cookies.set("userToken", response.data.data.userToken)
+      navigate("/food")
     }
+   }catch(error){
+    console.error(error)
+    setError("An error occurred during login. Please try again.")
+   }finally{
+    setIsLoading(false)
+   }
   }
 
   return (
@@ -56,17 +59,17 @@ export default function Login() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-sm font-medium">
-              Email
+            <Label htmlFor="username" className="text-sm font-medium">
+              Username
             </Label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
               <Input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                id="username"
+                type="text"
+                placeholder="@johh123"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 className="pl-10"
                 required
               />

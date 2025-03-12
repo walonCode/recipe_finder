@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react"
-import { useParams } from "react-router-dom"
+import { useState} from "react"
 import { Calendar, Mail, MapPin, Star, ThumbsUp, ThumbsDown, Utensils, Clock, ChevronRight, Globe } from "lucide-react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../ui/card"
@@ -7,6 +6,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar"
 import { Badge } from "../../ui/badge"
 import { Button } from "../../ui/button"
 import { ScrollArea } from "../../ui/scroll-area"
+import Cookies from "js-cookie"
+import { jwtDecode } from "jwt-decode"
 
 interface UserData {
   _id: string
@@ -49,181 +50,30 @@ interface Vote {
   createdAt: string
 }
 
+interface User {
+  _id:string,
+  address:string,
+  bio:string,
+  fullname:string,
+  username: string,
+  email:string,
+  food:string[],
+  rating:string[]
+  votes:string[]
+  createdAt: string
+}
+
 const Profile = () => {
-  const { userId } = useParams()
-  const [user, setUser] = useState<UserData | null>(null)
   const [foods, setFoods] = useState<Food[]>([])
   const [ratings, setRatings] = useState<Rating[]>([])
   const [votes, setVotes] = useState<Vote[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
 
-  useEffect(() => {
-    // In a real application, you would fetch this data from your API
-    // const fetchUserData = async () => {
-    //   try {
-    //     setIsLoading(true)
-    //     const [userResponse, foodsResponse, ratingsResponse, votesResponse] = await Promise.all([
-    //       fetch(`/api/users/${userId}`),
-    //       fetch(`/api/foods/user/${userId}`),
-    //       fetch(`/api/ratings/user/${userId}`),
-    //       fetch(`/api/voting/user/${userId}`)
-    //     ])
-    //
-    //     const userData = await userResponse.json()
-    //     const foodsData = await foodsResponse.json()
-    //     const ratingsData = await ratingsResponse.json()
-    //     const votesData = await votesResponse.json()
-    //
-    //     setUser(userData)
-    //     setFoods(foodsData)
-    //     setRatings(ratingsData)
-    //     setVotes(votesData)
-    //   } catch (err) {
-    //     setError("Failed to load user data")
-    //     console.error(err)
-    //   } finally {
-    //     setIsLoading(false)
-    //   }
-    // }
-    //
-    // fetchUserData()
+  const token = Cookies.get("userToken") as string
+  const decodedUser = jwtDecode(token) as User
 
-    // Mock data for development
-    setTimeout(() => {
-      setUser({
-        _id: "user123",
-        username: "CulinaryExplorer",
-        email: "chef@example.com",
-        location: "New York, USA",
-        bio: "Passionate home cook exploring flavors from around the world. I love experimenting with new ingredients and techniques.",
-        avatarUrl: "",
-        joinDate: "2022-03-15T10:30:00Z",
-        stats: {
-          totalFoods: 12,
-          totalRatings: 47,
-          totalVotes: 89,
-        },
-      })
 
-      setFoods([
-        {
-          _id: "food1",
-          name: "Spaghetti Bolognese",
-          origin: "Italy",
-          ingredient: ["Spaghetti", "Ground Beef", "Tomato Sauce", "Onion", "Garlic"],
-          createdAt: "2023-01-10T14:30:00Z",
-          ratings: { average: 4.5, count: 28 },
-          votes: { like: 42, dislike: 3 },
-        },
-        {
-          _id: "food2",
-          name: "Chicken Tikka Masala",
-          origin: "India",
-          ingredient: ["Chicken", "Yogurt", "Tomato Sauce", "Spices", "Cream"],
-          createdAt: "2023-02-05T09:15:00Z",
-          ratings: { average: 4.8, count: 35 },
-          votes: { like: 51, dislike: 2 },
-        },
-        {
-          _id: "food3",
-          name: "Beef Tacos",
-          origin: "Mexico",
-          ingredient: ["Tortillas", "Ground Beef", "Lettuce", "Tomato", "Cheese"],
-          createdAt: "2023-03-22T16:45:00Z",
-          ratings: { average: 4.2, count: 19 },
-          votes: { like: 31, dislike: 5 },
-        },
-        {
-          _id: "food4",
-          name: "Pad Thai",
-          origin: "Thailand",
-          ingredient: ["Rice Noodles", "Shrimp", "Tofu", "Bean Sprouts", "Peanuts"],
-          createdAt: "2023-04-18T11:20:00Z",
-          ratings: { average: 4.6, count: 22 },
-          votes: { like: 38, dislike: 1 },
-        },
-      ])
-
-      setRatings([
-        {
-          _id: "rating1",
-          foodId: "food101",
-          foodName: "Beef Wellington",
-          rating: 5,
-          createdAt: "2023-05-12T10:30:00Z",
-        },
-        {
-          _id: "rating2",
-          foodId: "food102",
-          foodName: "Mushroom Risotto",
-          rating: 4,
-          createdAt: "2023-05-15T14:45:00Z",
-        },
-        {
-          _id: "rating3",
-          foodId: "food103",
-          foodName: "Chocolate Soufflé",
-          rating: 5,
-          createdAt: "2023-05-20T19:15:00Z",
-        },
-        {
-          _id: "rating4",
-          foodId: "food104",
-          foodName: "Caesar Salad",
-          rating: 3,
-          createdAt: "2023-05-25T12:10:00Z",
-        },
-        {
-          _id: "rating5",
-          foodId: "food105",
-          foodName: "Beef Stroganoff",
-          rating: 4,
-          createdAt: "2023-06-02T18:30:00Z",
-        },
-      ])
-
-      setVotes([
-        {
-          _id: "vote1",
-          foodId: "food201",
-          foodName: "Lasagna",
-          votesType: "like",
-          createdAt: "2023-04-10T09:20:00Z",
-        },
-        {
-          _id: "vote2",
-          foodId: "food202",
-          foodName: "Chicken Parmesan",
-          votesType: "like",
-          createdAt: "2023-04-15T13:40:00Z",
-        },
-        {
-          _id: "vote3",
-          foodId: "food203",
-          foodName: "Beef Stir Fry",
-          votesType: "dislike",
-          createdAt: "2023-04-22T17:05:00Z",
-        },
-        {
-          _id: "vote4",
-          foodId: "food204",
-          foodName: "Vegetable Curry",
-          votesType: "like",
-          createdAt: "2023-04-28T11:50:00Z",
-        },
-        {
-          _id: "vote5",
-          foodId: "food205",
-          foodName: "Shrimp Scampi",
-          votesType: "like",
-          createdAt: "2023-05-05T20:15:00Z",
-        },
-      ])
-
-      setIsLoading(false)
-    }, 1000) // Simulate loading delay
-  }, [userId])
 
   if (isLoading) {
     return (
@@ -233,7 +83,7 @@ const Profile = () => {
     )
   }
 
-  if (error || !user) {
+  if (error || !decodedUser) {
     return (
       <div className="text-center py-10">
         <h2 className="text-2xl font-bold">Error Loading Profile</h2>
@@ -250,48 +100,48 @@ const Profile = () => {
           <div className="flex flex-col md:flex-row gap-6">
             <div className="flex flex-col items-center md:items-start">
               <Avatar className="h-24 w-24 md:h-32 md:w-32">
-                <AvatarImage src={user.avatarUrl} alt={user.username} />
-                <AvatarFallback className="text-2xl">{user.username.substring(0, 2).toUpperCase()}</AvatarFallback>
+                <AvatarImage/>
+                <AvatarFallback className="text-2xl">{decodedUser.username.substring(0, 2).toUpperCase()}</AvatarFallback>
               </Avatar>
             </div>
 
             <div className="flex-1 space-y-4">
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold">{user.username}</h1>
+                <h1 className="text-2xl md:text-3xl font-bold">{decodedUser.username}</h1>
                 <div className="flex flex-wrap gap-2 mt-2">
                   <Badge variant="outline" className="flex items-center gap-1">
                     <Mail className="h-3 w-3" />
-                    <span>{user.email}</span>
+                    <span>{decodedUser.email}</span>
                   </Badge>
-                  {user.location && (
+                  {decodedUser.address && (
                     <Badge variant="outline" className="flex items-center gap-1">
                       <MapPin className="h-3 w-3" />
-                      <span>{user.location}</span>
+                      <span>{decodedUser.address}</span>
                     </Badge>
                   )}
                   <Badge variant="outline" className="flex items-center gap-1">
                     <Calendar className="h-3 w-3" />
-                    <span>Joined {new Date(user.joinDate).toLocaleDateString()}</span>
+                    <span>Joined {new Date(decodedUser.createdAt).toLocaleDateString()}</span>
                   </Badge>
                 </div>
               </div>
 
-              {user.bio && <p className="text-muted-foreground">{user.bio}</p>}
+              {decodedUser.bio && <p className="text-muted-foreground">{decodedUser.bio}</p>}
 
               <div className="grid grid-cols-3 gap-4 pt-2">
                 <div className="flex flex-col items-center p-3 bg-muted/50 rounded-lg">
                   <Utensils className="h-5 w-5 mb-1 text-primary" />
-                  <span className="text-xl font-bold">{user.stats.totalFoods}</span>
+                  <span className="text-xl font-bold">{50}</span>
                   <span className="text-xs text-muted-foreground">Recipes</span>
                 </div>
                 <div className="flex flex-col items-center p-3 bg-muted/50 rounded-lg">
                   <Star className="h-5 w-5 mb-1 text-primary" />
-                  <span className="text-xl font-bold">{user.stats.totalRatings}</span>
+                  <span className="text-xl font-bold">{45}</span>
                   <span className="text-xs text-muted-foreground">Ratings</span>
                 </div>
                 <div className="flex flex-col items-center p-3 bg-muted/50 rounded-lg">
                   <ThumbsUp className="h-5 w-5 mb-1 text-primary" />
-                  <span className="text-xl font-bold">{user.stats.totalVotes}</span>
+                  <span className="text-xl font-bold">{20}</span>
                   <span className="text-xs text-muted-foreground">Votes</span>
                 </div>
               </div>

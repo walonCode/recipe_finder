@@ -8,7 +8,7 @@ const useAuthRedirect = () => {
 
   useEffect(() => {
     if (token) {
-      navigate("/dashboard"); 
+      navigate("/food"); 
     }
   }, [token, navigate]);
 };
