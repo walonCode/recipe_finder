@@ -10,15 +10,16 @@ const foodAdapter = createEntityAdapter<Food, string>({
 
 export const addFood = createAsyncThunk('food/addFood', async (food: AddFood, { rejectWithValue }) => {
     try {
-        const { name, origin, ingredients } = food;
-        if (!name || !origin || !ingredients) {
+        const { name, origin, ingredient } = food;
+        if (!name || !origin || !ingredient) {
             return rejectWithValue("All fields are required");
         }
         const response = await axiosInstance.post("/foods", {
             name,
             origin,
-            ingredients
+            ingredient
         });
+        console.log(response.data);
         return response.data.data as Food;
     } catch (error) {
         console.error(error);
@@ -29,7 +30,6 @@ export const addFood = createAsyncThunk('food/addFood', async (food: AddFood, { 
 export const getAllFood = createAsyncThunk('food/getAllFood', async (_, { rejectWithValue }) => {
     try {
         const response = await axiosInstance.get("/foods");
-        console.log(response.data.data)
         return response.data.data as Food[];
     } catch (error) {
         console.error(error);

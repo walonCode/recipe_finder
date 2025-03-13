@@ -1,28 +1,21 @@
-"use client"
-
 import { useState } from "react"
 import { ChevronDown, ChevronUp, User, Clock } from "lucide-react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card"
 import { Button } from "../ui/button"
 import { Badge } from "../ui/badge"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible"
+import { selectAllStep } from "../../store/features/step/stepSlice"
+import { useAppSelector } from "../../hooks/storeHook"
+import { Step } from "../../lib/types"
 
-interface Step {
-  _id?: string
-  step: string[]
-  username: string
-  userId: string
-  createdAt?: string
-}
 
-interface StepsListProps {
-  steps: string[] | Step[]
-  isSimpleSteps?: boolean
-}
 
-const StepsList = ({ steps, isSimpleSteps = true }: StepsListProps) => {
+const StepsList = ({ foodId, isSimpleSteps = true }:{foodId:string | undefined, isSimpleSteps?:boolean}) => {
   const [openStepSets, setOpenStepSets] = useState<Record<string, boolean>>({})
 
+  const allSteps = useAppSelector(selectAllStep)
+  const filterSteps = allSteps.filter(step => step.foodId === foodId)
+  
   const toggleStepSet = (id: string) => {
     setOpenStepSets((prev) => ({
       ...prev,
@@ -40,9 +33,9 @@ const StepsList = ({ steps, isSimpleSteps = true }: StepsListProps) => {
         </CardHeader>
         <CardContent>
           <ol className="space-y-4 list-decimal list-inside">
-            {(steps as string[])?.map((step, index) => (
+            {(filterSteps as Step[])?.map((step, index) => (
               <li key={index} className="pl-2 py-2 border-b border-muted last:border-0">
-                <span className="ml-2">{step}</span>
+                <span className="ml-2">{step.step}</span>
               </li>
             ))}
           </ol>
@@ -54,7 +47,7 @@ const StepsList = ({ steps, isSimpleSteps = true }: StepsListProps) => {
   // If steps is an array of Step objects (contributed steps)
   return (
     <div className="space-y-4">
-      {(steps as Step[]).map((stepSet) => (
+      {(filterSteps as Step[]).map((stepSet) => (
         <Collapsible
           key={stepSet._id || Math.random().toString()}
           open={openStepSets[stepSet._id || ""]}

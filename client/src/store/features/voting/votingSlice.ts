@@ -22,7 +22,7 @@ export const addVote = createAsyncThunk('vote/addVote', async (data:AddVote,{ re
             foodId,
             voteType
         })
-        return response.data as Vote
+        return response.data.data as Vote
     }catch(error){
         console.error(error)
         return rejectWithValue("Failed to add step")
@@ -32,7 +32,7 @@ export const addVote = createAsyncThunk('vote/addVote', async (data:AddVote,{ re
 export const getTotalVote = createAsyncThunk('vote/getAllFoodVote', async (_,{ rejectWithValue }) => {
     try{
         const response = await axiosInstance.get(`/votes`)
-        return response.data as Vote[]
+        return response.data.data as Vote[]
     }catch(error){
         console.error(error)
         return rejectWithValue("Failed to fetch votes")
@@ -42,7 +42,7 @@ export const getTotalVote = createAsyncThunk('vote/getAllFoodVote', async (_,{ r
 export const deleteVote = createAsyncThunk('step/deleteVote', async (id:string,{ rejectWithValue }) => {
     try{
         const response = await axiosInstance.delete(`/votes/${id}`)
-        return response.data as Vote
+        return response.data.data as Vote
     }catch(error){
         console.error(error)
         return rejectWithValue("Failed to delete vote")

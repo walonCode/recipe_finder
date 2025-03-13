@@ -21,7 +21,7 @@ export const addRating = createAsyncThunk('rating/addRating', async (data:AddRat
             foodId,
             rating
         })
-        return response.data as Rating
+        return response.data.data as Rating
     }catch(error){
         console.error(error)
         return rejectWithValue("Failed to add rating")
@@ -31,7 +31,7 @@ export const addRating = createAsyncThunk('rating/addRating', async (data:AddRat
 export const getAllRating = createAsyncThunk('rating/getAllFoodRating', async (_,{ rejectWithValue }) => {
     try{
         const response = await axiosInstance.get(`/ratings`)
-        return response.data as Rating[]
+        return response.data.data as Rating[]
     }catch(error){
         console.error(error)
         return rejectWithValue("Failed to fetch rating")
@@ -41,7 +41,7 @@ export const getAllRating = createAsyncThunk('rating/getAllFoodRating', async (_
 export const deleteRating = createAsyncThunk('rating/deleteRating', async (id:string,{ rejectWithValue }) => {
     try{
         const response = await axiosInstance.delete(`/ratings/${id}`)
-        return response.data as {id: string}
+        return response.data.data as {id: string}
     }catch(error){
         console.error(error)
         return rejectWithValue("Failed to delete rating")

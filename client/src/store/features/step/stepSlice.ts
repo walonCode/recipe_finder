@@ -21,7 +21,7 @@ export const addStep = createAsyncThunk('step/addStep', async (data:AddStep,{ re
             foodId,
             step
         })
-        return response.data as Step
+        return response.data.data as Step
     }catch(error){
         console.error(error)
         return rejectWithValue("Failed to add step")
@@ -31,7 +31,7 @@ export const addStep = createAsyncThunk('step/addStep', async (data:AddStep,{ re
 export const getAllSteps = createAsyncThunk('step/getAllFoodSteps', async (_,{ rejectWithValue }) => {
     try{
         const response = await axiosInstance.get('/steps')
-        return response.data as Step[]
+        return response.data.data as Step[]
     }catch(error){
         console.error(error)
         return rejectWithValue("Failed to fetch steps")
@@ -41,7 +41,7 @@ export const getAllSteps = createAsyncThunk('step/getAllFoodSteps', async (_,{ r
 export const deleteStep = createAsyncThunk('step/deleteStep', async (id:string,{ rejectWithValue }) => {
     try{
         const response = await axiosInstance.delete(`/steps/${id}`)
-        return response.data as Step
+        return response.data.data as Step
     }catch(error){
         console.error(error)
         return rejectWithValue("Failed to delete step")

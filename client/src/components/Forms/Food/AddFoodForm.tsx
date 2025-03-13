@@ -43,7 +43,7 @@ const AddFoodForm = () => {
     e.preventDefault()
     try{
       setIsLoading(true)
-      const action = await dispatch(addFood({name,origin,ingredients}))
+      const action = await dispatch(addFood({name,origin,ingredient:ingredients}))
       if(addFood.fulfilled.match(action)){
         navigate('/food')
         setSuccess("Food added successfully")
@@ -138,13 +138,14 @@ const AddFoodForm = () => {
                 <AlertDescription>{success}</AlertDescription>
               </Alert>
             )}
-          </form>
-        </CardContent>
-        <CardFooter>
+            <CardFooter>
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading ? "Adding Food..." : "Submit Food"}
           </Button>
         </CardFooter>
+          </form>
+        </CardContent>
+        
       </Card>
     </div>
   )

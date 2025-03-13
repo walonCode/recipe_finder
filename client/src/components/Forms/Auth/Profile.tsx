@@ -1,4 +1,3 @@
-import { useState} from "react"
 import { Calendar, Mail, MapPin, Star, ThumbsUp, ThumbsDown, Utensils, Clock, ChevronRight, Globe } from "lucide-react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../ui/card"
@@ -8,36 +7,24 @@ import { Button } from "../../ui/button"
 import { ScrollArea } from "../../ui/scroll-area"
 import Cookies from "js-cookie"
 import { jwtDecode } from "jwt-decode"
-import { Food, Rating, User, Vote } from "../../../lib/types"
+import {  User } from "../../../lib/types"
+import { selectAllFood } from "../../../store/features/food/foodSlice"
+import { selectAllRating } from "../../../store/features/rating/ratingSlice"
+import { getAllVote } from "../../../store/features/voting/votingSlice"
+import { useAppSelector } from "../../../hooks/storeHook"
 
 const Profile = () => {
-  const [foods, setFoods] = useState<Food[]>([])
-  const [ratings, setRatings] = useState<Rating[]>([])
-  const [votes, setVotes] = useState<Vote[]>([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState("")
-
   const token = Cookies.get("userToken") as string
   const decodedUser = jwtDecode(token) as User
 
+  const allFoods = useAppSelector(selectAllFood)
+  const filterFood = allFoods.filter(food => food.username === decodedUser.username)
 
+  const allRating = useAppSelector(selectAllRating)
+  const filterRating = allRating.filter(rating => rating.username === decodedUser.username)
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-[60vh]">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-      </div>
-    )
-  }
-
-  if (error || !decodedUser) {
-    return (
-      <div className="text-center py-10">
-        <h2 className="text-2xl font-bold">Error Loading Profile</h2>
-        <p className="text-muted-foreground">{error || "User not found"}</p>
-      </div>
-    )
-  }
+  const allVotes = useAppSelector(getAllVote)
+  const filterVote = allVotes.filter(vote => vote.username === decodedUser.username)
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
@@ -78,17 +65,17 @@ const Profile = () => {
               <div className="grid grid-cols-3 gap-4 pt-2">
                 <div className="flex flex-col items-center p-3 bg-muted/50 rounded-lg">
                   <Utensils className="h-5 w-5 mb-1 text-primary" />
-                  <span className="text-xl font-bold">{50}</span>
+                  <span className="text-xl font-bold">{decodedUser?.food.length}</span>
                   <span className="text-xs text-muted-foreground">Recipes</span>
                 </div>
                 <div className="flex flex-col items-center p-3 bg-muted/50 rounded-lg">
                   <Star className="h-5 w-5 mb-1 text-primary" />
-                  <span className="text-xl font-bold">{45}</span>
+                  <span className="text-xl font-bold">{decodedUser?.ratings.length}</span>
                   <span className="text-xs text-muted-foreground">Ratings</span>
                 </div>
                 <div className="flex flex-col items-center p-3 bg-muted/50 rounded-lg">
                   <ThumbsUp className="h-5 w-5 mb-1 text-primary" />
-                  <span className="text-xl font-bold">{20}</span>
+                  <span className="text-xl font-bold">{decodedUser?.votes.length}</span>
                   <span className="text-xs text-muted-foreground">Votes</span>
                 </div>
               </div>
@@ -114,7 +101,7 @@ const Profile = () => {
             </Button>
           </div>
 
-          {foods.length === 0 ? (
+          {filterFood.length === 0 ? (
             <Card>
               <CardContent className="py-10 text-center">
                 <p className="text-muted-foreground">No recipes created yet.</p>
@@ -122,7 +109,7 @@ const Profile = () => {
             </Card>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {foods.map((food) => (
+              {filterFood.map((food) => (
                 <Card key={food._id} className="overflow-hidden">
                   <CardHeader className="pb-2">
                     <CardTitle className="text-xl">{food.name}</CardTitle>
@@ -148,17 +135,17 @@ const Profile = () => {
                       <div className="flex items-center">
                         <Star className="h-4 w-4 text-yellow-500 fill-yellow-500 mr-1" />
                         <span>
-                          {food.ratings.average.toFixed(1)} ({food.ratings.count})
+                          {food.ratings.length} ({food.ratings.length})
                         </span>
                       </div>
                       <div className="flex items-center gap-3">
                         <span className="flex items-center">
                           <ThumbsUp className="h-4 w-4 mr-1 text-green-500" />
-                          {food.votes.like}
+                          {food.votes.length}
                         </span>
                         <span className="flex items-center">
                           <ThumbsDown className="h-4 w-4 mr-1 text-red-500" />
-                          {food.votes.dislike}
+                          {food.votes.length}
                         </span>
                       </div>
                     </div>
@@ -169,7 +156,7 @@ const Profile = () => {
                       <span>{new Date(food.createdAt).toLocaleDateString()}</span>
                     </div>
                     <Button variant="ghost" size="sm" className="gap-1" asChild>
-                      <a href={`/foods/${food._id}`}>
+                      <a href={`/food/${food._id}`}>
                         View Recipe
                         <ChevronRight className="h-4 w-4" />
                       </a>
@@ -190,7 +177,7 @@ const Profile = () => {
             </Button>
           </div>
 
-          {ratings.length === 0 ? (
+          {filterRating.length === 0 ? (
             <Card>
               <CardContent className="py-10 text-center">
                 <p className="text-muted-foreground">No ratings given yet.</p>
@@ -200,11 +187,11 @@ const Profile = () => {
             <Card>
               <ScrollArea className="h-[400px]">
                 <div className="divide-y">
-                  {ratings.map((rating) => (
+                  {filterRating.map((rating) => (
                     <div key={rating._id} className="p-4 hover:bg-muted/50">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h3 className="font-medium">{rating.foodName}</h3>
+                          <h3 className="font-medium">{rating.username}</h3>
                           <div className="flex items-center mt-1">
                             <div className="flex">
                               {[1, 2, 3, 4, 5].map((star) => (
@@ -220,7 +207,7 @@ const Profile = () => {
                           </div>
                         </div>
                         <Button variant="ghost" size="sm" asChild>
-                          <a href={`/foods/${rating.foodId}`}>View Recipe</a>
+                          <a href={`/food/${rating.foodId}`}>View Recipe</a>
                         </Button>
                       </div>
                     </div>
@@ -240,7 +227,7 @@ const Profile = () => {
             </Button>
           </div>
 
-          {votes.length === 0 ? (
+          {filterVote.length === 0 ? (
             <Card>
               <CardContent className="py-10 text-center">
                 <p className="text-muted-foreground">No votes given yet.</p>
@@ -250,25 +237,25 @@ const Profile = () => {
             <Card>
               <ScrollArea className="h-[400px]">
                 <div className="divide-y">
-                  {votes.map((vote) => (
+                  {filterVote.map((vote) => (
                     <div key={vote._id} className="p-4 hover:bg-muted/50">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h3 className="font-medium">{vote.foodName}</h3>
+                          <h3 className="font-medium">{vote.username}</h3>
                           <div className="flex items-center mt-1">
-                            {vote.votesType === "like" ? (
+                            {vote.voteType === "like" ? (
                               <ThumbsUp className="h-4 w-4 text-green-500" />
                             ) : (
                               <ThumbsDown className="h-4 w-4 text-red-500" />
                             )}
-                            <span className="ml-2 text-sm capitalize">{vote.votesType}d</span>
+                            <span className="ml-2 text-sm capitalize">{vote.voteType}d</span>
                             <span className="ml-2 text-sm text-muted-foreground">
                               {new Date(vote.createdAt).toLocaleDateString()}
                             </span>
                           </div>
                         </div>
                         <Button variant="ghost" size="sm" asChild>
-                          <a href={`/foods/${vote.foodId}`}>View Recipe</a>
+                          <a href={`/food/${vote.foodId}`}>View Recipe</a>
                         </Button>
                       </div>
                     </div>

@@ -46,12 +46,12 @@ const RatingAndVotingForm = ({ foodId }: { foodId: string | undefined }) => {
     }
   };
 
-  const handleVote = async (voteType: "like" | "dislike") => {
+  const handleVote = async (votesType: "like" | "dislike") => {
     setIsLoading(true);
     setError("");
     setSuccess("");
     try {
-      const action = await dispatch(addVote({ foodId, voteType }));
+      const action = await dispatch(addVote({ foodId, votesType }));
       if (addVote.fulfilled.match(action)) {
         setSuccess("Vote submitted successfully!");
         await dispatch(getTotalVote());

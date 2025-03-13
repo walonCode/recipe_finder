@@ -8,7 +8,7 @@ export interface User {
     email:string,
     bio:string,
     votes:string[],
-    foods:string[],
+    food:string[],
     createdAt:string,
     ratings:string[]
 }
@@ -31,7 +31,6 @@ export interface Food {
 export interface Rating {
     _id: string
     foodId: string
-    foodName: string
     rating: number
     username:string
     createdAt: string
@@ -40,8 +39,8 @@ export interface Rating {
 export interface Vote {
     _id: string
     foodId: string
-    foodName: string
-    voteType: "like" | "dislike"
+    username:string
+    votesType: "like" | "dislike"
     createdAt: string
 }
 
@@ -50,7 +49,8 @@ export interface Step {
     step: string[]
     username: string
     userId: string,
-    foodId: string
+    foodId: string,
+    createdAt:string
 }
 
 export interface FoodSlice extends EntityState<Food, string> {
@@ -76,7 +76,7 @@ export interface StepSlice extends EntityState<Step, string> {
 export interface AddFood {
     name:string,
     origin:string,
-    ingredients:string[],
+    ingredient:string[],
 }
 
 export interface UpdateFood extends AddFood{
@@ -90,7 +90,7 @@ export interface AddRating {
 
 export interface AddVote {
     foodId:string | undefined,
-    voteType:"like" | "dislike"
+    votesType:"like" | "dislike"
 }
 
 export interface AddStep {
