@@ -17,10 +17,10 @@ const FoodList: React.FC = () => {
 
   const filteredFoods = mockFoods.filter(
     (food) =>
-      food.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      food.origin?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (Array.isArray(food.ingredient) &&
-        food.ingredient.some((ing) => ing.toLowerCase().includes(searchTerm.toLowerCase()))),
+      food?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      food?.origin?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (Array.isArray(food?.ingredient) &&
+        food?.ingredient?.some((ing) => ing.toLowerCase().includes(searchTerm.toLowerCase()))),
   )
 
   console.log(JSON.stringify(filteredFoods))
@@ -43,7 +43,7 @@ const FoodList: React.FC = () => {
       </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredFoods.map((food) => (
-            <FoodCard key={food._id} food={food} />
+            <FoodCard key={food?._id} food={food} />
           ))}
         </div>
     </div>

@@ -22,12 +22,13 @@ export default function App() {
         <Route  element={<RequiredAuth/>}>
           <Route path='/add_food' element={<AddFoodForm/>}/>
           <Route path='/profile' element={<Profile/>}/>
-
-          <Route path="food">
-            <Route index element={<FoodList/>}/>
+        </Route>
+        <Route path="food">
+          <Route index element={<FoodList/>}/>
+          <Route  element={<RequiredAuth/>}>
             <Route path=':id' element={<FoodDetails/>}/>
             <Route path="edit/:id" element={<EditFood/>}/>
-          </Route>
+           </Route>
         </Route>
         
       </Route>

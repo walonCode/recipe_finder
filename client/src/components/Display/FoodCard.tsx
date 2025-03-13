@@ -21,7 +21,7 @@ const FoodCard = ({ food }:{food:Food}) => {
           </div>
           <Avatar>
             <AvatarImage src={`https://api.dicebear.com/6.x/initials/svg?seed=${food.username}`} />
-            <AvatarFallback>{food.username.slice(0, 2).toUpperCase()}</AvatarFallback>
+            <AvatarFallback>{food?.username.slice(0, 2).toUpperCase()}</AvatarFallback>
           </Avatar>
         </div>
       </CardHeader>
@@ -35,29 +35,29 @@ const FoodCard = ({ food }:{food:Food}) => {
                   {ing}
                 </Badge>
               ))}
-              {food.ingredient.length > 5 && <Badge variant="secondary">+{food.ingredient.length - 5} more</Badge>}
+              {food.ingredient.length > 5 && <Badge variant="secondary">+{food?.ingredient?.length - 5} more</Badge>}
             </div>
           </div>
           <div className="flex items-center justify-between text-sm">
             <div className="flex items-center">
               <Utensils className="h-4 w-4 mr-1" />
-              <span>{food.steps.length} steps</span>
+              <span>{food?.steps?.length} steps</span>
             </div>
             <div className="flex items-center space-x-4">
               <div className="flex items-center">
                 <Star className="h-4 w-4 text-yellow-400 fill-yellow-400 mr-1" />
                 <span>
-                  {food.ratings.length} ({food.ratings.length})
+                  {food?.ratings?.length} ({food?.ratings?.length})
                 </span>
               </div>
               <div className="flex items-center space-x-2">
                 <div className="flex items-center">
                   <ThumbsUp className="h-4 w-4 text-green-500 mr-1" />
-                  <span>{food.votes.length}</span>
+                  <span>{food?.votes?.length}</span>
                 </div>
                 <div className="flex items-center">
                   <ThumbsDown className="h-4 w-4 text-red-500 mr-1" />
-                  <span>{food.votes.length}</span>
+                  <span>{food?.votes?.length}</span>
                 </div>
               </div>
             </div>
@@ -66,7 +66,7 @@ const FoodCard = ({ food }:{food:Food}) => {
       </CardContent>
       <CardFooter>
         <Button asChild className="w-full">
-          <Link to={`/food/${food._id}`}>View Recipe</Link>
+          <Link to={`/food/${food?._id}`}>View Recipe</Link>
         </Button>
       </CardFooter>
     </Card>
