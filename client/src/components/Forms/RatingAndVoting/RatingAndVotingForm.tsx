@@ -1,65 +1,68 @@
-import { useState, useEffect } from "react"
-import axios from "axios"
-import { Star, ThumbsUp, ThumbsDown } from "lucide-react"
-import { Button } from "../../ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../ui/card"
-import { Alert, AlertDescription } from "../../ui/alert"
-import { Progress } from "../../ui/progress"
-import { addVote, getTotalVote } from "../../../store/features/voting/votingSlice"
-import { addRating,getAllRating } from "../../../store/features/rating/ratingSlice"
-import { useAppDispatch } from "../../../hooks/storeHook"
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { useState } from "react";
+import { Star, ThumbsUp, ThumbsDown } from "lucide-react";
+import { Button } from "../../ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../ui/card";
+import { Alert, AlertDescription } from "../../ui/alert";
+import { Progress } from "../../ui/progress";
+import { addVote, getTotalVote } from "../../../store/features/voting/votingSlice";
+import { addRating, getAllRating } from "../../../store/features/rating/ratingSlice";
+import { useAppDispatch } from "../../../hooks/storeHook";
 
+const RatingAndVotingForm = ({ foodId }: { foodId: string | undefined }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [userRating, setUserRating] = useState<number | null>(null);
+  const [userVote, setUserVote] = useState<"like" | "dislike" | null>(null);
+  const [ratingStats, setRatingStats] = useState<{
+    averageRating: number;
+    totalRatings: number;
+    ratingCounts: Record<number, number>;
+  } | null>(null);
+  const [votingStats, setVotingStats] = useState<{
+    likes: number;
+    dislikes: number;
+  } | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
+  const dispatch = useAppDispatch();
 
-
-const RatingAndVotingForm = ({foodId}:{foodId:string}) => {
-  const [userRating, setUserRating] = useState(null)
-  const [userVote, setUserVote] = useState<"like" | "dislike" | null>(null)
-  const [ratingStats, setRatingStats] = useState(null)
-  const [votingStats, setVotingStats] = useState(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState("")
-  const [success, setSuccess] = useState("")
-
-  const dispatch = useAppDispatch()
-
-
- 
   const handleRating = async (rating: number) => {
-    setIsLoading(true)
-    setError("")
-    setSuccess("")
+    setIsLoading(true);
+    setError("");
+    setSuccess("");
     try {
-      const action = await dispatch(addRating({foodId,rating}))
-      if(addRating.fulfilled.match(action)){
-        setSuccess("Rating submitted successfully!")
-        await dispatch(getAllRating())
+      const action = await dispatch(addRating({ foodId, rating }));
+      if (addRating.fulfilled.match(action)) {
+        setSuccess("Rating submitted successfully!");
+        await dispatch(getAllRating());
       }
     } catch (error) {
-      setError("Error submitting rating. Please try again.")
-      console.error("Error submitting rating:", error)
+      setError("Error submitting rating. Please try again.");
+      console.error("Error submitting rating:", error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleVote = async (voteType: "like" | "dislike") => {
-    setIsLoading(true)
-    setError("")
-    setSuccess("")
+    setIsLoading(true);
+    setError("");
+    setSuccess("");
     try {
-      const action = await dispatch(addVote({foodId,voteType}))
-      if(addVote.fulfilled.match(action)){
-        setSuccess("Vote submitted successfully!")
-        await dispatch(getTotalVote())
+      const action = await dispatch(addVote({ foodId, voteType }));
+      if (addVote.fulfilled.match(action)) {
+        setSuccess("Vote submitted successfully!");
+        await dispatch(getTotalVote());
       }
     } catch (error) {
-      setError("Error submitting vote. Please try again.")
-      console.error("Error submitting vote:", error)
+      setError("Error submitting vote. Please try again.");
+      console.error("Error submitting vote:", error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <Card className="w-full max-w-md mx-auto">
@@ -73,7 +76,13 @@ const RatingAndVotingForm = ({foodId}:{foodId:string}) => {
             <h3 className="text-lg font-semibold mb-2">Rating</h3>
             <div className="flex items-center space-x-1">
               {[1, 2, 3, 4, 5].map((star) => (
-                <Button key={star} variant="ghost" size="sm" onClick={() => handleRating(star)} disabled={isLoading}>
+                <Button
+                  key={star}
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleRating(star)}
+                  disabled={isLoading}
+                >
                   <Star
                     className={`h-6 w-6 ${
                       (userRating ?? 0) >= star ? "text-yellow-400 fill-yellow-400" : "text-gray-300"
@@ -144,8 +153,7 @@ const RatingAndVotingForm = ({foodId}:{foodId:string}) => {
         </div>
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default RatingAndVotingForm
-
+export default RatingAndVotingForm;

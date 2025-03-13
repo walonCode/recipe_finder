@@ -40,7 +40,7 @@ const StepsList = ({ steps, isSimpleSteps = true }: StepsListProps) => {
         </CardHeader>
         <CardContent>
           <ol className="space-y-4 list-decimal list-inside">
-            {(steps as string[]).map((step, index) => (
+            {(steps as string[])?.map((step, index) => (
               <li key={index} className="pl-2 py-2 border-b border-muted last:border-0">
                 <span className="ml-2">{step}</span>
               </li>

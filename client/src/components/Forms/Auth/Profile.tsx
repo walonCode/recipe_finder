@@ -10,12 +10,6 @@ import Cookies from "js-cookie"
 import { jwtDecode } from "jwt-decode"
 import { Food, Rating, User, Vote } from "../../../lib/types"
 
-
-
-
-
-
-
 const Profile = () => {
   const [foods, setFoods] = useState<Food[]>([])
   const [ratings, setRatings] = useState<Rating[]>([])

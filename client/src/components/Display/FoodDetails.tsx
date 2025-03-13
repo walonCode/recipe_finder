@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { Globe, Clock, Utensils, ChefHat, Plus } from "lucide-react"
@@ -11,6 +9,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui
 import { Badge } from "../ui/badge"
 import { Separator } from "../ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs"
+import { selectFoodById } from "../../store/features/food/foodSlice"
+import { useAppSelector } from "../../hooks/storeHook"
 
 interface Step {
   _id: string
@@ -39,6 +39,8 @@ const FoodDetails = () => {
   const [isAddStepModalOpen, setIsAddStepModalOpen] = useState(false)
   const [contributedSteps, setContributedSteps] = useState<Step[]>([])
   const [isLoading, setIsLoading] = useState(true)
+
+  const selectedFood = useAppSelector(state => selectFoodById(state, id ?? ""))
 
   useEffect(() => {
     // Fetch food data from API
@@ -155,14 +157,14 @@ const FoodDetails = () => {
             <CardHeader>
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                  <CardTitle className="text-3xl font-bold">{food.name}</CardTitle>
+                  <CardTitle className="text-3xl font-bold">{selectedFood?.name}</CardTitle>
                   <CardDescription className="flex items-center mt-2">
                     <Globe className="h-4 w-4 mr-1" />
-                    <span>Origin: {food.origin}</span>
-                    {food.createdAt && (
+                    <span>Origin: {selectedFood?.origin}</span>
+                    {selectedFood?.createdAt && (
                       <>
                         <Clock className="h-4 w-4 ml-4 mr-1" />
-                        <span>Added: {new Date(food.createdAt).toLocaleDateString()}</span>
+                        <span>Added: {new Date(selectedFood?.createdAt).toLocaleDateString()}</span>
                       </>
                     )}
                   </CardDescription>
@@ -170,7 +172,7 @@ const FoodDetails = () => {
                 <div className="flex items-center gap-2">
                   <Badge variant="outline" className="flex items-center gap-1">
                     <ChefHat className="h-3 w-3" />
-                    <span>{food.username}</span>
+                    <span>{selectedFood?.username}</span>
                   </Badge>
                 </div>
               </div>
@@ -182,7 +184,7 @@ const FoodDetails = () => {
                 Ingredients
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {food.ingredient.map((ingredient, index) => (
+                {selectedFood?.ingredient?.map((ingredient, index) => (
                   <div key={index} className="flex items-center p-2 rounded-md bg-muted/50">
                     <span className="h-2 w-2 rounded-full bg-primary mr-2"></span>
                     <span>{ingredient}</span>
@@ -205,7 +207,7 @@ const FoodDetails = () => {
             </div>
 
             <TabsContent value="original">
-              <StepsList steps={food.steps} isSimpleSteps={true} />
+              <StepsList steps={selectedFood?.steps} isSimpleSteps={true} />
             </TabsContent>
 
             <TabsContent value="contributed">
@@ -224,7 +226,7 @@ const FoodDetails = () => {
 
         {/* Sidebar - 1/3 width on medium screens and up */}
         <div className="space-y-6">
-          <RatingAndVotingForm />
+          <RatingAndVotingForm foodId={id}/>
 
           <Card>
             <CardHeader>
@@ -234,11 +236,11 @@ const FoodDetails = () => {
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Ingredients:</span>
-                  <span className="font-medium">{food.ingredient.length}</span>
+                  <span className="font-medium">{selectedFood?.ingredient?.length}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Steps:</span>
-                  <span className="font-medium">{Array.isArray(food.steps) ? food.steps.length : 0}</span>
+                  <span className="font-medium">{Array.isArray(selectedFood?.steps) ? selectedFood?.steps?.length : 0}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Community Contributions:</span>
@@ -247,19 +249,19 @@ const FoodDetails = () => {
                 <Separator className="my-2" />
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Average Rating:</span>
-                  <span className="font-medium">{food.ratings.average.toFixed(1)} / 5</span>
+                  <span className="font-medium">{selectedFood?.ratings?.length.toFixed(1)} / 5</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Total Ratings:</span>
-                  <span className="font-medium">{food.ratings.count}</span>
+                  <span className="font-medium">{selectedFood?.ratings.length}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Likes:</span>
-                  <span className="font-medium">{food.votes.like}</span>
+                  <span className="font-medium">{selectedFood?.votes.filter((vote) => vote === "likes").length}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Dislikes:</span>
-                  <span className="font-medium">{food.votes.dislike}</span>
+                  <span className="font-medium">{selectedFood?.votes.filter((vote) => vote === "dislikes").length}</span>
                 </div>
               </div>
             </CardContent>
@@ -269,7 +271,7 @@ const FoodDetails = () => {
 
       {/* Add Step Modal */}
       {isAddStepModalOpen && (
-        <AddStep/>
+        <AddStep foodId={id}/>
       )}
     </div>
   )

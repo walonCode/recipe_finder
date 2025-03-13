@@ -1,26 +1,13 @@
-import type React from "react"
 import { Link } from "react-router-dom"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card"
 import { Badge } from "../ui/badge"
 import { Button } from "../ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { Utensils, MapPin, Star, ThumbsUp, ThumbsDown } from "lucide-react"
+import { Food } from "../../lib/types"
 
-interface FoodCardProps {
-  food: {
-    _id: string
-    name: string
-    origin: string
-    ingredient: string[]
-    steps: string[]
-    votes: { like: number; dislike: number }
-    ratings: { average: number; count: number }
-    userId: string
-    username: string
-  }
-}
 
-const FoodCard: React.FC<FoodCardProps> = ({ food }) => {
+const FoodCard = ({ food }:{food:Food}) => {
   return (
     <Card className="w-full max-w-md mx-auto hover:shadow-lg transition-shadow duration-300">
       <CardHeader>
@@ -60,17 +47,17 @@ const FoodCard: React.FC<FoodCardProps> = ({ food }) => {
               <div className="flex items-center">
                 <Star className="h-4 w-4 text-yellow-400 fill-yellow-400 mr-1" />
                 <span>
-                  {food.ratings.average.toFixed(1)} ({food.ratings.count})
+                  {food.ratings.length} ({food.ratings.length})
                 </span>
               </div>
               <div className="flex items-center space-x-2">
                 <div className="flex items-center">
                   <ThumbsUp className="h-4 w-4 text-green-500 mr-1" />
-                  <span>{food.votes.like}</span>
+                  <span>{food.votes.length}</span>
                 </div>
                 <div className="flex items-center">
                   <ThumbsDown className="h-4 w-4 text-red-500 mr-1" />
-                  <span>{food.votes.dislike}</span>
+                  <span>{food.votes.length}</span>
                 </div>
               </div>
             </div>

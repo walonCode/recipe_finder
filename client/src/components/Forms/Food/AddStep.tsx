@@ -16,7 +16,7 @@ import {
 import { addStep,getAllSteps } from "../../../store/features/step/stepSlice"
 import { useAppDispatch } from "../../../hooks/storeHook"
 
-const AddStep = ({foodId}:{foodId:string}) => {
+const AddStep = ({foodId}:{foodId:string | undefined}) => {
   const [step, setStep] = useState<string[]>([""])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
