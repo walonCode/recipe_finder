@@ -16,11 +16,11 @@ const initialState:VoteSlice = voteAdaptor.getInitialState({
 
 export const addVote = createAsyncThunk('vote/addVote', async (data:AddVote,{ rejectWithValue }) => {
     try{
-        const { foodId, voteType } = data
-        if(!foodId || !voteType) return rejectWithValue("Missing foodId or step")
+        const { foodId, votesType } = data
+        if(!foodId || !votesType) return rejectWithValue("Missing foodId or step")
         const response = await axiosInstance.post("/votes",{
             foodId,
-            voteType
+            votesType
         })
         return response.data.data as Vote
     }catch(error){

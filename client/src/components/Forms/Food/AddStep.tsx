@@ -15,6 +15,7 @@ import {
 } from "../../ui/dialog"
 import { addStep,getAllSteps } from "../../../store/features/step/stepSlice"
 import { useAppDispatch } from "../../../hooks/storeHook"
+import { getAllFood } from "../../../store/features/food/foodSlice"
 
 const AddStep = ({foodId}:{foodId:string | undefined}) => {
   const [step, setStep] = useState<string[]>([""])
@@ -58,6 +59,7 @@ const AddStep = ({foodId}:{foodId:string | undefined}) => {
       if(addStep.fulfilled.match(action)){
         setSuccess("Steps added successfully")
         await dispatch(getAllSteps())
+        await dispatch(getAllFood())
         onClose()
       }
     } catch (error) {

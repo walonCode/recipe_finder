@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from "react";
 import { Star, ThumbsUp, ThumbsDown } from "lucide-react";
 import { Button } from "../../ui/button";
@@ -10,15 +9,14 @@ import { addRating, getAllRating } from "../../../store/features/rating/ratingSl
 import { useAppDispatch } from "../../../hooks/storeHook";
 
 const RatingAndVotingForm = ({ foodId }: { foodId: string | undefined }) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [userRating, setUserRating] = useState<number | null>(null);
-  const [userVote, setUserVote] = useState<"like" | "dislike" | null>(null);
-  const [ratingStats, setRatingStats] = useState<{
+  const [userRating, _setUserRating] = useState<number | null>(null);
+  const [userVote, _setUserVote] = useState<"like" | "dislike" | null>(null);
+  const [ratingStats, _setRatingStats] = useState<{
     averageRating: number;
     totalRatings: number;
     ratingCounts: Record<number, number>;
   } | null>(null);
-  const [votingStats, setVotingStats] = useState<{
+  const [votingStats, _setVotingStats] = useState<{
     likes: number;
     dislikes: number;
   } | null>(null);

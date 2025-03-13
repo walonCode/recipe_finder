@@ -243,12 +243,12 @@ const Profile = () => {
                         <div>
                           <h3 className="font-medium">{vote.username}</h3>
                           <div className="flex items-center mt-1">
-                            {vote.voteType === "like" ? (
+                            {vote.votesType === "like" ? (
                               <ThumbsUp className="h-4 w-4 text-green-500" />
                             ) : (
                               <ThumbsDown className="h-4 w-4 text-red-500" />
                             )}
-                            <span className="ml-2 text-sm capitalize">{vote.voteType}d</span>
+                            <span className="ml-2 text-sm capitalize">{vote.votesType}d</span>
                             <span className="ml-2 text-sm text-muted-foreground">
                               {new Date(vote.createdAt).toLocaleDateString()}
                             </span>
