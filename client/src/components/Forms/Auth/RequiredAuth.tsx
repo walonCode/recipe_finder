@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 function RequiredAuth() {
     const location = useLocation()
     const token = Cookies.get("accessToken")
-  return token ? <Outlet /> : <Navigate to="/login" state={{ from: location }} replace/>
+  return token ? <Outlet /> : <Navigate to="#/login" state={{ from: location }} replace/>
 }
 
 export default RequiredAuth
