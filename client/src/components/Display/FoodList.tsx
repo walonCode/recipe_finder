@@ -14,7 +14,7 @@ const FoodList: React.FC = () => {
 
   const mockFoods = useAppSelector(selectAllFood)
   
-  console.log(mockFoods)
+ 
 
   const filteredFoods = mockFoods.filter(
     (food) =>
@@ -24,7 +24,6 @@ const FoodList: React.FC = () => {
         food?.ingredient?.some((ing) => ing.toLowerCase().includes(searchTerm.toLowerCase()))),
   )
 
-  console.log(JSON.stringify(filteredFoods))
 
   // Pagination logic
   const indexOfLastFood = currentPage * foodsPerPage
