@@ -1,7 +1,7 @@
 import { createSlice,createEntityAdapter,createAsyncThunk } from "@reduxjs/toolkit";
-import { axiosInstance } from "../../../../../src/core/api/axiosInstance";
+import { axiosInstance } from "@/core/api/axiosInstance";
 import { RootState } from "../../store"; 
-import {  AddVote, Vote, VoteSlice } from "../../../lib/types";
+import {  AddVote, Vote, VoteSlice } from "@/core/types/types";
 
 
 const voteAdaptor = createEntityAdapter<Vote, string>({

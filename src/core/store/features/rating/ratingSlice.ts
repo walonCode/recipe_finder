@@ -1,7 +1,7 @@
 import { createSlice,createEntityAdapter,createAsyncThunk } from "@reduxjs/toolkit";
-import { axiosInstance } from "../../../../../src/core/api/axiosInstance";
+import { axiosInstance } from "@/core/api/axiosInstance";
 import { RootState } from "../../store";
-import { AddRating, Rating, RatingSlice } from "../../../lib/types";
+import { AddRating, Rating, RatingSlice } from "@/core/types/types";
 
 const ratingAdaptor = createEntityAdapter<Rating, string>({
     selectId: (rating) => rating._id,

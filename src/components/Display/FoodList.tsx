@@ -50,9 +50,16 @@ const FoodList: React.FC = () => {
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {currentFoods.map((food) => (
-          <FoodCard key={food?._id} food={food} />
-        ))}
+        {currentFoods.length > 0 ? (
+          (currentFoods.map((food) => (
+            <FoodCard key={food?._id} food={food} />
+          )))
+        ) : (
+          <div className="grid grid-cols place-items-center justify-center min-h-screen">
+            <p className="text-2xl text-red-500 font-bold text-center">No recipe found</p>
+          </div>
+        )
+        }
       </div>
       {/* Pagination Controls */}
       {totalPages > 1 && (

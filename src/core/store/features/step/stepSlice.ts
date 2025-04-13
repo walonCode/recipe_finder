@@ -1,7 +1,7 @@
 import { createSlice,createEntityAdapter,createAsyncThunk } from "@reduxjs/toolkit";
-import { axiosInstance } from "../../../../../src/core/api/axiosInstance";
+import { axiosInstance } from "@/core/api/axiosInstance";
 import { RootState } from "../../store"; 
-import { AddStep, Step, StepSlice } from "../../../lib/types";
+import { AddStep, Step, StepSlice } from "@/core/types/types";
 
 const stepAdaptor = createEntityAdapter<Step, string>({
     selectId: (step) => step._id,
