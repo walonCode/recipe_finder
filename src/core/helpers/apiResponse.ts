@@ -1,9 +1,12 @@
-import { Response } from "express";
+import { NextResponse } from "next/server";
 
-export const apiResponse = (res:Response, statusCode:number, message:string, data:any) => {
-    return res.status(statusCode).json({
-        success:true, 
-        message, 
-        data
-    })
-}
+export const apiResponse = (message: string, statusCode: number, data: object | null = null) => {
+    return NextResponse.json(
+        {
+            success: statusCode >= 200 && statusCode < 300,
+            message,
+            data
+        },
+        { status: statusCode }
+    );
+};

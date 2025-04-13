@@ -1,11 +1,26 @@
-import { Response,} from 'express';
+import { NextResponse } from "next/server";
 
-export const errorHandler =(res:Response, statusCode:number,message:string, error:Error | null | string) => {
-    if(error){
-        console.error(error)
+export const errorHandler = (
+    statusCode: number,
+    message: string,
+    error: Error | null | string | unknown
+) => {
+    console.error("Error:", error);
+
+    // Process error details safely
+    let errorDetails = null;
+    if (error instanceof Error) {
+        errorDetails = error.message; 
+    } else if (typeof error === "string") {
+        errorDetails = error;
     }
-    return res.status(statusCode).json({
-        success:false,
-        message
-    })
-}
+
+    return NextResponse.json(
+        {
+            success: false,
+            message,
+            ...(process.env.NODE_ENV !== "production" && errorDetails ? { error: errorDetails } : {}),
+        },
+        { status: statusCode }
+    );
+};

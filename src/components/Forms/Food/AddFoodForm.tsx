@@ -9,16 +9,20 @@ import { Label } from "../../ui/label"
 import { Alert, AlertDescription } from "../../ui/alert"
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "../../ui/card"
 import { useRouter } from "next/navigation"
-import { addFood,getAllFood } from "@/core/store/features/food/foodSlice"
+import { getAllFood } from "@/core/store/features/food/foodSlice"
 import { useAppDispatch } from "@/core/hooks/storeHook"
+import ImageView from "@/components/ImageView"
+import { axiosInstance } from "@/core/api/axiosInstance"
+
 
 const AddFoodForm = () => {
   const [name, setName] = useState("")
   const [origin, setOrigin] = useState("")
   const [ingredients, setIngredients] = useState<string[]>([""])
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState("")
-  const [success, setSuccess] = useState("")
+  const [success, setSuccess] = useState(false)
+  const [image, setImage] = useState<File | null>(null)
+  const [error, setError] = useState<Record<string,string>>({})
 
   const dispatch = useAppDispatch()
 
@@ -41,19 +45,47 @@ const AddFoodForm = () => {
     }
   }
 
+  const validateForm = () => {
+    if(name.trim() === ""){
+      setError((prev) => ({ ...prev, name: "Name is required"}))
+    }
+    if(origin.trim() === ""){
+      setError((prev) => ({ ...prev, origin: "Origin is required"}))
+    }
+    if(ingredients.length === 0){
+      setError((prev) => ({ ...prev, ingredients: "At least one ingredient is required"}))
+    }
+    if(ingredients.map((ing) => ing.trim()).includes("")){
+      setError((prev) => ({ ...prev, ingredients: "At least one ingredient is required"}))
+    }
+    if(!image){
+      setError((prev) => ({ ...prev, image: "Image is required"}))
+    }
+    
+    return Object.keys(error).length === 0
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try{
-      setIsLoading(true)
-      const action = await dispatch(addFood({name,origin,ingredient:ingredients}))
-      if(addFood.fulfilled.match(action)){
-        router.push('/food')
-        setSuccess("Food added successfully")
-        await dispatch(getAllFood())
+      if(!validateForm()){
+        setIsLoading(true)
+        setError({})
+        const formData = new FormData()
+        formData.append("name", name)
+        formData.append("origin", origin)
+        formData.append("ingredients", JSON.stringify(ingredients))
+        formData.append("image", image as File)
+        const response = await axiosInstance.post('/food',formData)
+        if(response.status === 201){
+          setSuccess(true)
+          await dispatch(getAllFood())
+          router.push("/food")
+        }
       }
     }catch(error){
       console.error(error)
-      setError("Adding food failed")
+      setError((prev) => ({...prev, axiosError:"Something went wrong"}))
     }finally{
       setIsLoading(false)
     }
@@ -78,10 +110,12 @@ const AddFoodForm = () => {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="pl-10"
-                  required
                 />
               </div>
+              <p className="text-red-500 text-sm">{error.name}</p>
             </div>
+
+            <ImageView onImageChange={setImage} error={error} />
 
             <div className="space-y-2">
               <Label htmlFor="origin">Origin</Label>
@@ -94,9 +128,9 @@ const AddFoodForm = () => {
                   value={origin}
                   onChange={(e) => setOrigin(e.target.value)}
                   className="pl-10"
-                  required
                 />
               </div>
+              <p className="text-red-500 text-sm">{error.origin}</p>
             </div>
 
             <div className="space-y-2">
@@ -122,16 +156,18 @@ const AddFoodForm = () => {
                   >
                     <Minus className="h-4 w-4" />
                   </Button>
+                  
                 </div>
               ))}
               <Button type="button" variant="outline" onClick={addIngredient} className="w-full mt-2">
                 <Plus className="h-4 w-4 mr-2" /> Add Ingredient
               </Button>
+              <p className="text-red-500 text-sm">{error.ingredients}</p>
             </div>
 
             {error && (
               <Alert variant="destructive">
-                <AlertDescription>{error}</AlertDescription>
+                <AlertDescription>{error.axiosError ? error.axiosError : " " }</AlertDescription>
               </Alert>
             )}
 

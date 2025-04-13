@@ -1,7 +1,7 @@
 import { model,Schema, Document} from 'mongoose'
 
 interface User extends Document {
-    fullname:String
+    fullname:string
     username: string
     password: string
     email: string

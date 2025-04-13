@@ -1,35 +1,10 @@
 import axios from "axios";
-import Cookies from "js-cookie";
+
+const baseURL = process.env.NODE_ENV === "development" ? "http://localhost:3000/api/" : "https://recipe-finderserver.vercel.app/api/v1";
 
 export const axiosInstance = axios.create({
-    baseURL: 'https://recipe-finderserver.vercel.app/api/v1',
+    baseURL,
     withCredentials: true,
 });
 
 
-axiosInstance.interceptors.request.use((config) => {
-    const token = Cookies.get("accessToken");
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-    } else {
-        delete config.headers.Authorization;
-    }
-    return config;
-}, (error) => Promise.reject(error));
-
-
-axiosInstance.interceptors.response.use(
-    response => response,
-    error => {
-        if (error.response) {
-            if (error.response.status === 401) {
-                Cookies.remove("accessToken");
-                window.location.href = "/";
-            } else if (error.response.status === 403) {
-                alert("You do not have permission to access this resource.");
-                window.location.href = "/";
-            }
-        }
-        return Promise.reject(error);
-    }
-);

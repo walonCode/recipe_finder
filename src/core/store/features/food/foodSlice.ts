@@ -1,5 +1,5 @@
 import { createSlice, createEntityAdapter, createAsyncThunk } from "@reduxjs/toolkit";
-import { AddFood, Food, FoodSlice, UpdateFood } from "../../../lib/types";
+import { Food, FoodSlice, UpdateFood } from "@/core/types/types";
 import { axiosInstance } from "../../../../../src/core/api/axiosInstance";
 import { RootState } from "../../store";
 
@@ -8,24 +8,6 @@ const foodAdapter = createEntityAdapter<Food, string>({
     sortComparer: (a, b) => (b._id ?? "").localeCompare(a._id ?? ""),
 });
 
-export const addFood = createAsyncThunk('food/addFood', async (food: AddFood, { rejectWithValue }) => {
-    try {
-        const { name, origin, ingredient } = food;
-        if (!name || !origin || !ingredient) {
-            return rejectWithValue("All fields are required");
-        }
-        const response = await axiosInstance.post("/foods", {
-            name,
-            origin,
-            ingredient
-        });
-        console.log(response.data);
-        return response.data.data as Food;
-    } catch (error) {
-        console.error(error);
-        return rejectWithValue("Failed to add food");
-    }
-});
 
 export const getAllFood = createAsyncThunk('food/getAllFood', async (_, { rejectWithValue }) => {
     try {
@@ -68,18 +50,6 @@ const foodSlice = createSlice({
     reducers: {},
     extraReducers(builder) {
         builder
-            .addCase(addFood.pending, (state) => {
-                state.status = "loading";
-                state.error = null;
-            })
-            .addCase(addFood.fulfilled, (state, action) => {
-                state.status = "succeeded";
-                foodAdapter.upsertOne(state, action.payload);
-            })
-            .addCase(addFood.rejected, (state, action) => {
-                state.status = "failed";
-                state.error = action.payload as string;
-            })
             .addCase(getAllFood.pending, (state) => {
                 state.status = "loading";
                 state.error = null;
