@@ -1,6 +1,9 @@
+"use client"
+
 import type React from "react"
 import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Eye, EyeOff, Mail, Lock } from "lucide-react"
 import { Button } from "../../ui/button"
 import { Input } from "../../ui/input"
@@ -9,8 +12,8 @@ import { Alert, AlertDescription } from "../../ui/alert"
 import { Checkbox } from "../../ui/checkbox"
 import { Separator } from "../../ui/separator"
 import Cookies from "js-cookie"
-import { axiosInstance } from "../../../api/axiosInstance"
-import useAuthRedirect from "../../../hooks/useAuthRedirect"
+import { axiosInstance } from "@/core/api/axiosInstance"
+import useAuthRedirect from "@/core/hooks/useAuthRedirect"
 
 
 export default function Login() {
@@ -20,7 +23,7 @@ export default function Login() {
   const [rememberMe, setRememberMe] = useState(false)
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  const navigate = useNavigate()
+  const router = useRouter()
   useAuthRedirect()
 
 
@@ -33,7 +36,7 @@ export default function Login() {
       console.log(response.data.data.userToken)
       Cookies.set("accessToken", response.data.data.accessToken)
       Cookies.set("userToken", response.data.data.userToken)
-      navigate("/food")
+      router.push("/food")
     }
    }catch(error){
     console.error(error)
@@ -119,7 +122,7 @@ export default function Login() {
                 Remember me
               </Label>
             </div>
-            <Link to="/forgot-password" className="text-sm font-medium text-primary hover:underline">
+            <Link href="/forgot-password" className="text-sm font-medium text-primary hover:underline">
               Forgot password?
             </Link>
           </div>
@@ -132,7 +135,7 @@ export default function Login() {
 
         <div className="text-center text-sm">
           New here.... create an account?{" "}
-          <Link to="/register" className="font-medium text-primary hover:underline">
+          <Link href="/signup" className="font-medium text-primary hover:underline">
             Sign up
           </Link>
         </div>

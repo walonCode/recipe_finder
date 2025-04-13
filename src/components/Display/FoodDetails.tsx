@@ -1,5 +1,7 @@
+"use client"
+
 import { useState } from "react"
-import { useParams } from "react-router-dom"
+import { useParams } from "next/navigation"
 import { Globe, Clock, Utensils, ChefHat, Plus } from "lucide-react"
 import RatingAndVotingForm from "../Forms/RatingAndVoting/RatingAndVotingForm"
 import AddStep from "../Forms/Food/AddStep"
@@ -9,17 +11,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui
 import { Badge } from "../ui/badge"
 import { Separator } from "../ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs"
-import { selectFoodById } from "../../store/features/food/foodSlice"
-import { selectAllStep } from "../../store/features/step/stepSlice"
-import { useAppSelector } from "../../hooks/storeHook"
+import { selectFoodById } from "@/core/store/features/food/foodSlice"
+import { selectAllStep } from "@/core/store/features/step/stepSlice"
+import { useAppSelector } from "@/core/hooks/storeHook"
+import { Food,} from "@/core/types/types"
 
 const FoodDetails = () => {
   const { id } = useParams()
   const [isAddStepModalOpen, setIsAddStepModalOpen] = useState(false)
   
 
-  const selectedFood = useAppSelector(state => selectFoodById(state, id ?? ""))
-  const allSteps = useAppSelector(selectAllStep)
+  const selectedFood = useAppSelector(state => selectFoodById(state, id as string)) as Food
+  const allSteps = useAppSelector(selectAllStep) 
   const filterSteps = allSteps.filter(step => step.foodId === id)
 
   return (
@@ -100,7 +103,7 @@ const FoodDetails = () => {
 
         {/* Sidebar - 1/3 width on medium screens and up */}
         <div className="space-y-6">
-          <RatingAndVotingForm foodId={id}/>
+          <RatingAndVotingForm foodId={id as string}/>
 
           <Card>
             <CardHeader>
@@ -145,7 +148,7 @@ const FoodDetails = () => {
 
       {/* Add Step Modal */}
       {isAddStepModalOpen && (
-        <AddStep foodId={id}/>
+        <AddStep foodId={id as string}/>
       )}
     </div>
   )

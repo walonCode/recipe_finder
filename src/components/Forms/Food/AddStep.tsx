@@ -1,3 +1,5 @@
+"use client"
+
 import type React from "react"
 import { useState } from "react"
 import { Plus, Minus, List } from "lucide-react"
@@ -13,9 +15,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../../ui/dialog"
-import { addStep,getAllSteps } from "../../../store/features/step/stepSlice"
-import { useAppDispatch } from "../../../hooks/storeHook"
-import { getAllFood } from "../../../store/features/food/foodSlice"
+import { addStep,getAllSteps } from "@/core/store/features/step/stepSlice"
+import { useAppDispatch } from "@/core/hooks/storeHook"
+import { getAllFood } from "@/core/store/features/food/foodSlice"
 
 const AddStep = ({foodId}:{foodId:string | undefined}) => {
   const [step, setStep] = useState<string[]>([""])

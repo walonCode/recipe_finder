@@ -1,12 +1,15 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+"use client"
+
 import { useState } from "react";
 import { Star, ThumbsUp, ThumbsDown } from "lucide-react";
 import { Button } from "../../ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../ui/card";
 import { Alert, AlertDescription } from "../../ui/alert";
 import { Progress } from "../../ui/progress";
-import { addVote, getTotalVote } from "../../../store/features/voting/votingSlice";
-import { addRating, getAllRating } from "../../../store/features/rating/ratingSlice";
-import { useAppDispatch } from "../../../hooks/storeHook";
+import { addVote, getTotalVote } from "@/core/store/features/voting/votingSlice";
+import { addRating, getAllRating } from "@/core/store/features/rating/ratingSlice";
+import { useAppDispatch } from "@/core/hooks/storeHook";
 
 const RatingAndVotingForm = ({ foodId }: { foodId: string | undefined }) => {
   const [userRating, _setUserRating] = useState<number | null>(null);

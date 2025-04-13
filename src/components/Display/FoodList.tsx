@@ -1,10 +1,12 @@
+"use client"
+
 import type React from "react"
 import { useState } from "react"
 import { Input } from "../ui/input"
 import { Search } from "lucide-react"
 import FoodCard from "./FoodCard"
-import { selectAllFood } from "../../store/features/food/foodSlice"
-import { useAppSelector } from "../../hooks/storeHook"
+import { selectAllFood } from "@/core/store/features/food/foodSlice"
+import { useAppSelector } from "@/core/hooks/storeHook"
 import { Button } from "../ui/button"
 
 const FoodList: React.FC = () => {
@@ -14,14 +16,12 @@ const FoodList: React.FC = () => {
 
   const mockFoods = useAppSelector(selectAllFood)
   
- 
-
   const filteredFoods = mockFoods.filter(
     (food) =>
       food?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       food?.origin?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (Array.isArray(food?.ingredient) &&
-        food?.ingredient?.some((ing) => ing.toLowerCase().includes(searchTerm.toLowerCase()))),
+        food?.ingredient?.some((ing: string) => ing.toLowerCase().includes(searchTerm.toLowerCase()))),
   )
 
 

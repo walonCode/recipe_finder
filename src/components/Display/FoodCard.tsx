@@ -1,10 +1,10 @@
-import { Link } from "react-router-dom"
+import Link from "next/link"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card"
 import { Badge } from "../ui/badge"
 import { Button } from "../ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { Utensils, MapPin, Star, ThumbsUp, ThumbsDown } from "lucide-react"
-import { Food } from "../../lib/types"
+import { Food } from "@/core/types/types"
 
 
 const FoodCard = ({ food }:{food:Food}) => {
@@ -66,7 +66,7 @@ const FoodCard = ({ food }:{food:Food}) => {
       </CardContent>
       <CardFooter>
         <Button asChild className="w-full">
-          <Link to={`/food/${food?._id}`}>View Recipe</Link>
+          <Link href={`/food/${food?._id}`}>View Recipe</Link>
         </Button>
       </CardFooter>
     </Card>

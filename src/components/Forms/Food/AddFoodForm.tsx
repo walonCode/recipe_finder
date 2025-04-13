@@ -1,3 +1,5 @@
+"use client"
+
 import type React from "react"
 import { useState } from "react"
 import { Plus, Minus, Utensils, MapPin, List } from "lucide-react"
@@ -6,9 +8,9 @@ import { Input } from "../../ui/input"
 import { Label } from "../../ui/label"
 import { Alert, AlertDescription } from "../../ui/alert"
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "../../ui/card"
-import { useNavigate } from "react-router-dom"
-import { addFood,getAllFood } from "../../../store/features/food/foodSlice"
-import { useAppDispatch } from "../../../hooks/storeHook"
+import { useRouter } from "next/navigation"
+import { addFood,getAllFood } from "@/core/store/features/food/foodSlice"
+import { useAppDispatch } from "@/core/hooks/storeHook"
 
 const AddFoodForm = () => {
   const [name, setName] = useState("")
@@ -20,7 +22,7 @@ const AddFoodForm = () => {
 
   const dispatch = useAppDispatch()
 
-  const navigate = useNavigate()
+  const router  = useRouter()
 
   const handleIngredientChange = (index: number, value: string) => {
     const newIngredients = [...ingredients]
@@ -45,7 +47,7 @@ const AddFoodForm = () => {
       setIsLoading(true)
       const action = await dispatch(addFood({name,origin,ingredient:ingredients}))
       if(addFood.fulfilled.match(action)){
-        navigate('/food')
+        router.push('/food')
         setSuccess("Food added successfully")
         await dispatch(getAllFood())
       }

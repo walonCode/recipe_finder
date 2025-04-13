@@ -1,6 +1,9 @@
+"use client"
+
 import type React from "react"
 import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Eye, EyeOff, User, Mail, Lock, CheckCircle, XCircle,Map } from "lucide-react"
 import { Button } from "../../ui/button"
 import { Input } from "../../ui/input"
@@ -10,8 +13,8 @@ import { Progress } from "../../ui/progress"
 import { Separator } from "../../ui/separator"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../ui/tooltip"
 import { Textarea } from "../../ui/textarea"
-import { axiosInstance } from "../../../api/axiosInstance"
-import useAuthRedirect from "../../../hooks/useAuthRedirect"
+import { axiosInstance } from "@/core/api/axiosInstance"
+import useAuthRedirect from "@/core/hooks/useAuthRedirect"
 
 
 export default function Register() {
@@ -26,7 +29,7 @@ export default function Register() {
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
-  const navigate = useNavigate()
+  const router = useRouter()
 
   useAuthRedirect()
 
@@ -44,7 +47,7 @@ export default function Register() {
           address
         })
         if(response.status === 201){
-          navigate("/login")
+          router.push("/login")
           console.log(response.data)
         }
       }
@@ -253,7 +256,7 @@ export default function Register() {
 
         <div className="text-center text-sm">
           Already have an account?{" "}
-          <Link to="/login" className="font-medium text-primary hover:underline">
+          <Link href="/login" className="font-medium text-primary hover:underline">
             Sign in
           </Link>
         </div>

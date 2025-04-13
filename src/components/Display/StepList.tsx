@@ -1,13 +1,14 @@
+"use client"
+
 import { useState } from "react"
 import { ChevronDown, ChevronUp, User, Clock } from "lucide-react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card"
 import { Button } from "../ui/button"
 import { Badge } from "../ui/badge"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible"
-import { selectAllStep } from "../../store/features/step/stepSlice"
-import { useAppSelector } from "../../hooks/storeHook"
-import { Step } from "../../lib/types"
-
+import { selectAllStep } from "@/core/store/features/step/stepSlice"
+import { useAppSelector } from "@/core/hooks/storeHook"
+import { Step } from "@/core/types/types"
 
 
 const StepsList = ({ foodId, isSimpleSteps = true }:{foodId:string | undefined, isSimpleSteps?:boolean}) => {

@@ -1,5 +1,7 @@
+"use client"
+
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import Link from "next/link"
 import { Home, Plus, BookOpen,  LogIn, UserCircle, LogOut, Menu, X } from "lucide-react"
 
 import {
@@ -48,7 +50,7 @@ export default function Navbar() {
     <header className="sticky mx-auto top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className=" flex h-16 mx-2 items-center justify-between">
         <div className="flex items-center gap-2">
-          <Link to="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2">
             <BookOpen className="h-6 w-6 text-green-600" />
             <span className="font-bold text-xl hidden sm:inline-block">Recipe Finder</span>
           </Link>
@@ -56,15 +58,15 @@ export default function Navbar() {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6">
-          <Link to="/" className="text-sm font-medium flex items-center gap-1 hover:text-primary">
+          <Link href="/" className="text-sm font-medium flex items-center gap-1 hover:text-primary">
             <Home className="h-4 w-4" />
             Home
           </Link>
-          <Link to="/add_food" className="text-sm font-medium flex items-center gap-1 hover:text-primary">
+          <Link href="/food/create" className="text-sm font-medium flex items-center gap-1 hover:text-primary">
             <Plus className="h-4 w-4" />
             Add Recipe
           </Link>
-          <Link to="/food" className="text-sm font-medium flex items-center gap-1 hover:text-primary">
+          <Link href="/food" className="text-sm font-medium flex items-center gap-1 hover:text-primary">
             <BookOpen className="h-4 w-4" />
             View Recipe
           </Link>
@@ -75,11 +77,11 @@ export default function Navbar() {
           {!isLoggedIn ? (
             <>
               <Button variant="outline" size="sm">
-                <Link to="/login" className="flex items-center gap-2">
+                <Link href="/login" className="flex items-center gap-2">
                 <LogIn className="h-4 w-4 mr-2" />
                 Login</Link>
               </Button>
-              <Button size="sm"><Link to='/register'>sign up</Link></Button>
+              <Button size="sm"><Link href='/signup'>sign up</Link></Button>
             </>
           ) : (
             <div className="flex items-center gap-4">
@@ -94,7 +96,7 @@ export default function Navbar() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem>
-                    <Link className="flex items-center gap-1" to='/profile'>
+                    <Link className="flex items-center gap-1" href='/profile'>
                       <UserCircle className="h-4 w-4 mr-2" /> Profile</Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
@@ -124,7 +126,7 @@ export default function Navbar() {
         <div className="md:hidden border-t p-4 bg-background">
           <nav className="flex flex-col space-y-4">
             <Link
-              to="/"
+              href="/"
               className="flex items-center gap-2 p-2 rounded-md hover:bg-muted"
               onClick={() => setIsMobileMenuOpen(false)}
             >
@@ -132,7 +134,7 @@ export default function Navbar() {
               Home
             </Link>
             <Link
-              to="/add_food"
+              href="/food/create"
               className="flex items-center gap-2 p-2 rounded-md hover:bg-muted"
               onClick={() => setIsMobileMenuOpen(false)}
             >
@@ -140,7 +142,7 @@ export default function Navbar() {
               Add Recipe
             </Link>
             <Link
-              to="/food"
+              href="/food"
               className="flex items-center gap-2 p-2 rounded-md hover:bg-muted"
               onClick={() => setIsMobileMenuOpen(false)}
             >
@@ -153,11 +155,11 @@ export default function Navbar() {
               {!isLoggedIn ? (
                 <div className="flex flex-col gap-2">
                   <Button variant="outline" className="w-full justify-start">
-                  <Link to='/login' className="flex items-center gap-2">
+                  <Link href='/login' className="flex items-center gap-2">
                     <LogIn className="h-5 w-5 mr-2" />
                     login</Link>
                   </Button>
-                  <Button className="w-full justify-start"><Link to='/register'>
+                  <Button className="w-full justify-start"><Link href='/signup'>
                   sign up</Link></Button>
                 </div>
               ) : (
@@ -167,7 +169,7 @@ export default function Navbar() {
                       <AvatarImage src="/placeholder.svg" alt="User" />
                       <AvatarFallback>{user?.username.substring(0,2).toUpperCase()}</AvatarFallback>
                     </Avatar>
-                    <span className="font-medium"><Link to='/profile'>My Account</Link></span>
+                    <span className="font-medium"><Link href='/profile'>My Account</Link></span>
                   </div>
                   <Button variant="destructive" className="w-full justify-start mt-2" onClick={handleLogout} >
                     <LogOut className="h-5 w-5 mr-2" />

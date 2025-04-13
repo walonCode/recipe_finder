@@ -1,16 +1,16 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 
 const useAuthRedirect = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const token = Cookies.get("accessToken");
 
   useEffect(() => {
     if (token) {
-      navigate("/food"); 
+      router.push("/food"); 
     }
-  }, [token, navigate]);
+  }, [token, router]);
 };
 
 export default useAuthRedirect;
