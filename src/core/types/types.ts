@@ -25,6 +25,7 @@ export interface Food {
     username:string,
     createdAt:string
     updatedAt:string,
+    image:string;
     __v:number
 }
 
@@ -84,17 +85,14 @@ export interface UpdateFood extends AddFood{
 }
 
 export interface AddRating {
-    foodId:string | undefined,
     rating:number
 }
 
 export interface AddVote {
-    foodId:string | undefined,
     votesType:"like" | "dislike"
 }
 
 export interface AddStep {
-    foodId:string | undefined,
     step:string[]
 }
 

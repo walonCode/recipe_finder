@@ -19,7 +19,7 @@ import { addStep,getAllSteps } from "@/core/store/features/step/stepSlice"
 import { useAppDispatch } from "@/core/hooks/storeHook"
 import { getAllFood } from "@/core/store/features/food/foodSlice"
 
-const AddStep = ({foodId}:{foodId:string | undefined}) => {
+const AddStep = () => {
   const [step, setStep] = useState<string[]>([""])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
@@ -57,7 +57,7 @@ const AddStep = ({foodId}:{foodId:string | undefined}) => {
     setSuccess("")
 
     try {
-      const action = await dispatch(addStep({step,foodId}))
+      const action = await dispatch(addStep({step}))
       if(addStep.fulfilled.match(action)){
         setSuccess("Steps added successfully")
         await dispatch(getAllSteps())

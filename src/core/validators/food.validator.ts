@@ -4,7 +4,6 @@ export const createFoodSchema = z.object({
     name: z.string().min(2, "Name must be at least 2 characters"),
     origin: z.string().min(2, "Origin must be at least 2 characters"),
     ingredient: z.array(z.string()).min(1, "Please provide at least one ingredients"),
-    username: z.string().min(2, "username should be at least two characters").optional()
 })
 
 export const updateFoodSchema = z.object({

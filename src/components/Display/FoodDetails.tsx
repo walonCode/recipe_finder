@@ -148,7 +148,7 @@ const FoodDetails = () => {
 
       {/* Add Step Modal */}
       {isAddStepModalOpen && (
-        <AddStep foodId={id as string}/>
+        <AddStep/>
       )}
     </div>
   )

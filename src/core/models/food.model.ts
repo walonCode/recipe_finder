@@ -8,7 +8,8 @@ interface Food extends Document {
     votes: string[];
     ratings: string[];
     userId: string | undefined;
-    username: string
+    username: string,
+    image:string
 }
 
 const foodSchema = new Schema<Food>({
@@ -44,6 +45,10 @@ const foodSchema = new Schema<Food>({
     username: {
         type: String,
         required: true
+    },
+    image:{
+        type:String,
+        required:true
     }
 },{ timestamps: true });
 

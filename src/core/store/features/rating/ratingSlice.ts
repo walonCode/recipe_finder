@@ -15,10 +15,9 @@ const initialState:RatingSlice = ratingAdaptor.getInitialState({
 
 export const addRating = createAsyncThunk('rating/addRating', async (data:AddRating,{ rejectWithValue }) => {
     try{
-        const { foodId, rating } = data
-        if(!foodId || !rating) return rejectWithValue("Missing foodId or rating")
+        const {rating } = data
+        if(!rating) return rejectWithValue("missing rating")
         const response = await axiosInstance.post("/ratings",{
-            foodId,
             rating
         })
         return response.data.data as Rating

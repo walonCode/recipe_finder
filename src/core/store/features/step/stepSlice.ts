@@ -15,10 +15,9 @@ const initialState:StepSlice = stepAdaptor.getInitialState({
 
 export const addStep = createAsyncThunk('step/addStep', async (data:AddStep,{ rejectWithValue }) => {
     try{
-        const { foodId, step } = data
-        if(!foodId || !step) return rejectWithValue("Missing foodId or step")
+        const {  step } = data
+        if(!step) return rejectWithValue("Missing foodId or step")
         const response = await axiosInstance.post("/steps",{
-            foodId,
             step
         })
         return response.data.data as Step

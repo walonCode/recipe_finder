@@ -34,7 +34,7 @@ const RatingAndVotingForm = ({ foodId }: { foodId: string | undefined }) => {
     setError("");
     setSuccess("");
     try {
-      const action = await dispatch(addRating({ foodId, rating }));
+      const action = await dispatch(addRating({ rating }));
       if (addRating.fulfilled.match(action)) {
         setSuccess("Rating submitted successfully!");
         await dispatch(getAllRating());
@@ -52,7 +52,7 @@ const RatingAndVotingForm = ({ foodId }: { foodId: string | undefined }) => {
     setError("");
     setSuccess("");
     try {
-      const action = await dispatch(addVote({ foodId, votesType }));
+      const action = await dispatch(addVote({  votesType }));
       if (addVote.fulfilled.match(action)) {
         setSuccess("Vote submitted successfully!");
         await dispatch(getTotalVote());
