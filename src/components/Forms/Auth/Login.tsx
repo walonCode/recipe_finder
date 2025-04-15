@@ -11,9 +11,10 @@ import { Label } from "../../ui/label"
 import { Alert, AlertDescription } from "../../ui/alert"
 import { Checkbox } from "../../ui/checkbox"
 import { Separator } from "../../ui/separator"
-import Cookies from "js-cookie"
 import { axiosInstance } from "@/core/api/axiosInstance"
 import useAuthRedirect from "@/core/hooks/useAuthRedirect"
+import { login } from "@/core/store/features/user/userSlice"
+import { useAppDispatch } from "@/core/hooks/storeHook"
 
 
 export default function Login() {
@@ -24,6 +25,7 @@ export default function Login() {
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const dispatch = useAppDispatch()
   useAuthRedirect()
 
 
@@ -34,8 +36,7 @@ export default function Login() {
     const response = await axiosInstance.post('/users/login',{username,password})
     if(response.status === 200){
       console.log(response.data.data.userToken)
-      Cookies.set("accessToken", response.data.data.accessToken)
-      Cookies.set("userToken", response.data.data.userToken)
+      dispatch(login({userToken:response.data.data.userToken as string,sessionToken:response.data.data.sessionToken as string }))
       router.push("/food")
     }
    }catch(error){

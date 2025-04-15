@@ -45,7 +45,11 @@ export async function POST(req: NextRequest) {
       expiresIn: "1d",
     });
 
-    const response = apiResponse("success", 200, { user, userToken });
+    const sessionToken = jwt.sign({id:user._id}, process.env.SESSION_TOKEN_SECRET!, {
+      expiresIn:"1d"
+    })
+
+    const response = apiResponse("success", 200, { user, userToken, sessionToken });
 
     response.cookies.set("accessToken", accessToken, { 
         httpOnly: true,

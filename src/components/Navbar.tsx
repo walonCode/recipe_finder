@@ -1,6 +1,5 @@
 "use client"
-
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Home, Plus, BookOpen,  LogIn, UserCircle, LogOut, Menu, X } from "lucide-react"
 
@@ -13,38 +12,51 @@ import {
 } from "./ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 import { Button } from "./ui/button"
+import { logout, } from "@/core/store/features/user/userSlice"
+import { useAppDispatch } from "@/core/hooks/storeHook"
 import Cookies from "js-cookie"
 import { jwtDecode } from "jwt-decode"
+import { useSelector } from "react-redux"
+import { RootState } from "@/core/store/store"
+import { User } from "@/core/types/types"
+import { useRouter } from "next/navigation"
 
 export default function Navbar() {
-  let isLoggedIn;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const isLoggedIn = useSelector((state:RootState) => state.user.isAuthenticated)
+  const [user, setUser] = useState<User | null>(null)
+  const [mounted, setMounted] = useState(false)
+  const router = useRouter()
+  const dispatch = useAppDispatch()
 
   // Toggle login state (for demo purposes)
 
-  if(Cookies.get("accessToken")){
-    isLoggedIn = true
-  }
-
   const token = Cookies.get("userToken");
-  let user
-  if (token) {
-    try {
-      user = jwtDecode(token) as { username: string };
-    } catch (error) {
-      console.error("Invalid token:", error);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!token) {
+      return console.log("No token found");
     }
-  } else {
-    console.warn("No token found in cookies.");
+
+    if (token) {
+      try {
+        const decoded = jwtDecode<User>(token);
+        setUser(decoded);
+      } catch (error) {
+        console.error("Invalid token", error);
+        setUser(null);
+      }
+    }
+  }, [token, router]);
+
+  if (!mounted) {
+    return null;
   }
 
-
-  const handleLogout = () => {
-    // Perform logout logic here
-    Cookies.remove("accessToken")
-    Cookies.remove("userToken")
-    window.location.href = "/login"
-  }
   
   return (
     <header className="sticky mx-auto top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -100,7 +112,7 @@ export default function Navbar() {
                       <UserCircle className="h-4 w-4 mr-2" /> Profile</Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout}>
+                  <DropdownMenuItem onClick={() => dispatch(logout())}>
                     <LogOut className="h-4 w-4 mr-2" />
                     Log Out
                   </DropdownMenuItem>
@@ -171,7 +183,7 @@ export default function Navbar() {
                     </Avatar>
                     <span className="font-medium"><Link href='/profile'>My Account</Link></span>
                   </div>
-                  <Button variant="destructive" className="w-full justify-start mt-2" onClick={handleLogout} >
+                  <Button variant="destructive" className="w-full justify-start mt-2" onClick={() => dispatch(logout())} >
                     <LogOut className="h-5 w-5 mr-2" />
                     Log Out
                   </Button>

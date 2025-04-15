@@ -9,7 +9,7 @@ interface AuthState {
 
 // Initial state checks if sessionToken exists
 const initialState: AuthState = {
-  isAuthenticated: !!Cookies.get("accessToken"),
+  isAuthenticated: !!Cookies.get("sessionToken"),
 };
 
 export const logout = createAsyncThunk('user/logout', async(_,{rejectWithValue}) => {
@@ -27,8 +27,9 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    login: (state, action: PayloadAction<{ userToken: string }>) => {
+    login: (state, action: PayloadAction<{ userToken: string, sessionToken:string }>) => {
       Cookies.set("userToken", action.payload.userToken, { expires: 1 });
+      Cookies.set("sessionToken", action.payload.sessionToken, { expires: 1 })
       state.isAuthenticated = true;
     },
   },
@@ -37,6 +38,7 @@ const authSlice = createSlice({
     builder.addCase(logout.fulfilled, (state) => {
       // Remove client-side cookies here as well if using thunk
       Cookies.remove("userToken");
+      Cookies.remove("sessionToken")
       state.isAuthenticated = false;
     });
     builder.addCase(logout.rejected, (state, action) => {

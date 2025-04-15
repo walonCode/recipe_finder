@@ -1,7 +1,7 @@
 import { createSlice,createEntityAdapter,createAsyncThunk } from "@reduxjs/toolkit";
 import { axiosInstance } from "@/core/api/axiosInstance";
 import { RootState } from "../../store"; 
-import { AddStep, Step, StepSlice } from "@/core/types/types";
+import { Step, StepSlice } from "@/core/types/types";
 
 const stepAdaptor = createEntityAdapter<Step, string>({
     selectId: (step) => step._id,
@@ -13,19 +13,6 @@ const initialState:StepSlice = stepAdaptor.getInitialState({
     error:null
 })
 
-export const addStep = createAsyncThunk('step/addStep', async (data:AddStep,{ rejectWithValue }) => {
-    try{
-        const {  step } = data
-        if(!step) return rejectWithValue("Missing foodId or step")
-        const response = await axiosInstance.post("/steps",{
-            step
-        })
-        return response.data.data as Step
-    }catch(error){
-        console.error(error)
-        return rejectWithValue("Failed to add step")
-    }
-})
 
 export const getAllSteps = createAsyncThunk('step/getAllFoodSteps', async (_,{ rejectWithValue }) => {
     try{
@@ -52,13 +39,7 @@ const stepSlice = createSlice({
     initialState,
     reducers:{},
     extraReducers: (builder) => {
-        builder.addCase(addStep.fulfilled, (state,action) => {
-            stepAdaptor.addOne(state, action.payload)
-        })
-        .addCase(addStep.rejected, (state,action) => {
-            state.status = "failed"
-            state.error = action.payload as string
-        })
+        builder
         .addCase(getAllSteps.pending, (state ) => {
             state.status = "loading"
             state.error = null

@@ -1,7 +1,7 @@
 import { createSlice,createEntityAdapter,createAsyncThunk } from "@reduxjs/toolkit";
 import { axiosInstance } from "@/core/api/axiosInstance";
 import { RootState } from "../../store";
-import { AddRating, Rating, RatingSlice } from "@/core/types/types";
+import {  Rating, RatingSlice } from "@/core/types/types";
 
 const ratingAdaptor = createEntityAdapter<Rating, string>({
     selectId: (rating) => rating._id,
@@ -13,19 +13,7 @@ const initialState:RatingSlice = ratingAdaptor.getInitialState({
     error:null
 })
 
-export const addRating = createAsyncThunk('rating/addRating', async (data:AddRating,{ rejectWithValue }) => {
-    try{
-        const {rating } = data
-        if(!rating) return rejectWithValue("missing rating")
-        const response = await axiosInstance.post("/ratings",{
-            rating
-        })
-        return response.data.data as Rating
-    }catch(error){
-        console.error(error)
-        return rejectWithValue("Failed to add rating")
-    }
-})
+
 
 export const getAllRating = createAsyncThunk('rating/getAllFoodRating', async (_,{ rejectWithValue }) => {
     try{
@@ -52,13 +40,7 @@ const ratingSlice = createSlice({
     initialState,
     reducers:{},
     extraReducers: (builder) => {
-        builder.addCase(addRating.fulfilled, (state,action) => {
-            ratingAdaptor.addOne(state, action.payload)
-        })
-        .addCase(addRating.rejected, (state,action) => {
-            state.status = "failed"
-            state.error = action.payload as string
-        })
+        builder
         .addCase(getAllRating.pending, (state ) => {
             state.status = "loading"
             state.error = null

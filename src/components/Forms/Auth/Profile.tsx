@@ -7,11 +7,11 @@ import { Button } from "../../ui/button"
 import { ScrollArea } from "../../ui/scroll-area"
 import Cookies from "js-cookie"
 import { jwtDecode } from "jwt-decode"
-import {  User } from "../../../lib/types"
-import { selectAllFood } from "../../../store/features/food/foodSlice"
-import { selectAllRating } from "../../../store/features/rating/ratingSlice"
-import { getAllVote } from "../../../store/features/voting/votingSlice"
-import { useAppSelector } from "../../../hooks/storeHook"
+import {  User } from "@/core/types/types"
+import { selectAllFood } from "@/core/store/features/food/foodSlice"
+import { selectAllRating } from "@/core/store/features/rating/ratingSlice"
+import { getAllVote } from "@/core/store/features/voting/votingSlice"
+import { useAppSelector } from "@/core/hooks/storeHook"
 
 const Profile = () => {
   const token = Cookies.get("userToken") as string
