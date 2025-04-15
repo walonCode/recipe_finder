@@ -31,7 +31,7 @@ export async function DELETE(req:NextRequest, {params}:{params:Promise<{ratingId
         const ratingId = (await params).ratingId
 
         //checking if the user has the rating id
-        const checking = user.ratings.map((rating) => rating === ratingId)
+        const checking = user.ratings.map((rating:string) => rating === ratingId)
         if(!checking){
             return errorHandler(400, "user if not allowed to delete this rating","not authorized")
         }

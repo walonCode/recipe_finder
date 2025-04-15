@@ -32,7 +32,7 @@ export async function DELETE(req:NextRequest, {params}:{params:Promise<{foodId:s
         //getting the param
         const foodId = (await params).foodId
 
-        if(user.food.map(food => food !== foodId )){
+        if(user.food.map((food:string) => food !== foodId )){
             return errorHandler(401, "not authorized to delete","not the creator of the food")
         }
 

@@ -31,7 +31,7 @@ export async function DELETE(req:NextRequest, {params}:{params:Promise<{votingId
         const votingId = (await params).votingId
 
         //checking if the user has the voting id
-        const checking = user.votes.map((vote) => vote === votingId)
+        const checking = user.votes.map((vote:string) => vote === votingId)
         if(!checking){
             return errorHandler(400, "user if not allowed to delete this voting","not authorized")
         }
