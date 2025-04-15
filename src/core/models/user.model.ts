@@ -8,7 +8,8 @@ interface User extends Document {
     food: string[]
     votes: string[],
     ratings: string[]
-    bio: string
+    bio: string,
+    steps:string[]
     address:string
 }
 
@@ -49,6 +50,10 @@ const userSchema = new Schema<User>({
     votes:[{
         type: Schema.Types.ObjectId,
         ref: 'Voting'
+    }],
+    steps:[{
+        type:Schema.Types.ObjectId,
+        ref:"Step"
     }]
 },{ timestamps: true });
 

@@ -57,10 +57,10 @@ export async function POST(req:NextRequest, {params}:{params:Promise<{foodId:str
 
         await newStep.save()
 
-        user.ratings.push(newStep._id as string)
+        user.steps.push(newStep._id as string)
         await user.save()
 
-        food.ratings.push(newStep._id as string)
+        food.steps.push(newStep._id as string)
         await food.save()
         
         return apiResponse("step created", 201, newStep)
