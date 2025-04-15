@@ -11,7 +11,7 @@ const foodAdapter = createEntityAdapter<Food, string>({
 
 export const getAllFood = createAsyncThunk('food/getAllFood', async (_, { rejectWithValue }) => {
     try {
-        const response = await axiosInstance.get("/foods");
+        const response = await axiosInstance.get("/food");
         return response.data.data as Food[];
     } catch (error) {
         console.error(error);
@@ -21,7 +21,7 @@ export const getAllFood = createAsyncThunk('food/getAllFood', async (_, { reject
 
 export const updateFood = createAsyncThunk('food/updateFood', async (food: UpdateFood, { rejectWithValue }) => {
     try {
-        const response = await axiosInstance.patch(`/foods/${food._id}`, food);
+        const response = await axiosInstance.patch(`/food/${food._id}`, food);
         return response.data.data as Food;
     } catch (error) {
         console.error(error);

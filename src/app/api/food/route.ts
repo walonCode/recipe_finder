@@ -28,7 +28,9 @@ export async function POST(req:NextRequest){
         const name = formData.get("name") as string
         const origin = formData.get("origin") as string
         const ingredients = formData.get("ingredients") as string
-        const image = formData.get("image") as File
+        const image = formData.get("image") as unknown as Blob
+
+
         
         //validating the data
         const reqBody = {
@@ -42,7 +44,7 @@ export async function POST(req:NextRequest){
         }
 
         if(!image){
-            return errorHandler(400, "please provide an image", "image not found")
+            console.error("No image")
         }
 
         //geting the user
@@ -57,37 +59,43 @@ export async function POST(req:NextRequest){
             return errorHandler(400, "food already exist","food is in the database")
         }
 
-        //getting the file buffer and make the image name
-        const fileName = `${name}`
-        const buffer = await image.arrayBuffer()
-        const imageBytes = Buffer.from(buffer)
-        const maxSize = 5 * 1024 * 1024
 
-        if(image.size > maxSize){
-            return errorHandler(400, "image size greater than 5mb", "image to large")
+        let imageUrl;
+
+        if(image && typeof(image).arrayBuffer === "function"){
+            //getting the file buffer and make the image name
+            const fileName = `${name}`
+            const buffer = await image.arrayBuffer()
+            const imageBytes = Buffer.from(buffer)
+            const maxSize = 5 * 1024 * 1024
+
+            if(image.size > maxSize){
+                return errorHandler(400, "image size greater than 5mb", "image to large")
+            }
+
+            const { error } = await supabase.storage.from("food").upload(
+                fileName, imageBytes, {
+                    cacheControl:'3600',
+                    upsert: false,
+                    contentType: image.type
+                }
+            )
+
+            if(error){
+                return errorHandler(500, "server error", error)
+            }
+
+            const { data:urlData } = supabase.storage.from('food').getPublicUrl(name, {
+                transform: {
+                    width:500,
+                    height:500,
+                    quality:50
+                }
+            })
+            imageUrl = urlData.publicUrl
         }
 
-        const { error } = await supabase.storage.from("food").upload(
-            fileName, imageBytes, {
-                cacheControl:'3600',
-                upsert: false,
-                contentType: image.type
-            }
-        )
-
-        if(error){
-            return errorHandler(500, "server error", error)
-        }
-
-        const { data:urlData } = supabase.storage.from('food').getPublicUrl(name, {
-            transform: {
-                width:500,
-                height:500,
-                quality:50
-            }
-        })
-
-        const imageUrl = urlData.publicUrl
+        
 
         //creating food in the databse
         const newFood = new Food({
@@ -108,5 +116,24 @@ export async function POST(req:NextRequest){
 
     }catch(error){
         return errorHandler(500, 'server error', error)
+    }
+}
+
+
+export async function GET(){
+    try{
+        //database connection
+        await connectDB()
+
+        //getting the foods
+        const food = await Food.find({})
+        if(food.length <= 0){
+            return apiResponse("food is empty", 200, null)
+        }
+
+        //sending the response
+        return apiResponse("foods", 200, food)
+    }catch(error){
+        return errorHandler(500, "server error", error)
     }
 }

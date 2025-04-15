@@ -1,7 +1,7 @@
 import { createSlice,createEntityAdapter,createAsyncThunk } from "@reduxjs/toolkit";
 import { axiosInstance } from "@/core/api/axiosInstance";
 import { RootState } from "../../store"; 
-import {  AddVote, Vote, VoteSlice } from "@/core/types/types";
+import { Vote, VoteSlice } from "@/core/types/types";
 
 
 const voteAdaptor = createEntityAdapter<Vote, string>({
@@ -14,23 +14,9 @@ const initialState:VoteSlice = voteAdaptor.getInitialState({
     error:null
 })
 
-export const addVote = createAsyncThunk('vote/addVote', async (data:AddVote,{ rejectWithValue }) => {
-    try{
-        const { votesType } = data
-        if(!votesType) return rejectWithValue("Missing foodId or step")
-        const response = await axiosInstance.post("/votes",{
-            votesType
-        })
-        return response.data.data as Vote
-    }catch(error){
-        console.error(error)
-        return rejectWithValue("Failed to add step")
-    }   
-})
-
 export const getTotalVote = createAsyncThunk('vote/getAllFoodVote', async (_,{ rejectWithValue }) => {
     try{
-        const response = await axiosInstance.get(`/votes`)
+        const response = await axiosInstance.get(`/voting`)
         return response.data.data as Vote[]
     }catch(error){
         console.error(error)
@@ -40,7 +26,7 @@ export const getTotalVote = createAsyncThunk('vote/getAllFoodVote', async (_,{ r
 
 export const deleteVote = createAsyncThunk('step/deleteVote', async (id:string,{ rejectWithValue }) => {
     try{
-        const response = await axiosInstance.delete(`/votes/${id}`)
+        const response = await axiosInstance.delete(`/voting/${id}`)
         return response.data.data as Vote
     }catch(error){
         console.error(error)
@@ -54,9 +40,6 @@ const voteSlice = createSlice({
     reducers:{},
     extraReducers:(builder) => {
         builder
-            .addCase(addVote.fulfilled,(state,action) => {
-                voteAdaptor.addOne(state,action.payload)
-            })
             .addCase(getTotalVote.fulfilled,(state,action) => {
                 voteAdaptor.setAll(state,action.payload)
             })

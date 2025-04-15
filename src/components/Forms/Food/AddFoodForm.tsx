@@ -58,9 +58,9 @@ const AddFoodForm = () => {
     if(ingredients.map((ing) => ing.trim()).includes("")){
       setError((prev) => ({ ...prev, ingredients: "At least one ingredient is required"}))
     }
-    if(!image){
-      setError((prev) => ({ ...prev, image: "Image is required"}))
-    }
+    // if(!image){
+    //   setError((prev) => ({ ...prev, image: "Image is required"}))
+    // }
     
     return Object.keys(error).length === 0
   }
@@ -177,7 +177,7 @@ const AddFoodForm = () => {
               </Alert>
             )}
             <CardFooter>
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button type="submit" className="w-full">
             {isLoading ? "Adding Food..." : "Submit Food"}
           </Button>
         </CardFooter>

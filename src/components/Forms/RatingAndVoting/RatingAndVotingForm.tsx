@@ -7,11 +7,12 @@ import { Button } from "../../ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../ui/card";
 import { Alert, AlertDescription } from "../../ui/alert";
 import { Progress } from "../../ui/progress";
-import { addVote, getTotalVote } from "@/core/store/features/voting/votingSlice";
-import { addRating, getAllRating } from "@/core/store/features/rating/ratingSlice";
+import {  getTotalVote } from "@/core/store/features/voting/votingSlice";
+import {  getAllRating } from "@/core/store/features/rating/ratingSlice";
 import { useAppDispatch } from "@/core/hooks/storeHook";
+import { axiosInstance } from "@/core/api/axiosInstance";
 
-const RatingAndVotingForm = ({ foodId }: { foodId: string | undefined }) => {
+const RatingAndVotingForm = ({ id }: { id: string  }) => {
   const [userRating, _setUserRating] = useState<number | null>(null);
   const [userVote, _setUserVote] = useState<"like" | "dislike" | null>(null);
   const [ratingStats, _setRatingStats] = useState<{
@@ -34,10 +35,9 @@ const RatingAndVotingForm = ({ foodId }: { foodId: string | undefined }) => {
     setError("");
     setSuccess("");
     try {
-      const action = await dispatch(addRating({ rating }));
-      if (addRating.fulfilled.match(action)) {
-        setSuccess("Rating submitted successfully!");
-        await dispatch(getAllRating());
+      const response = await axiosInstance.post(`/food/${id}/rating`, rating)
+      if(response.status === 201){
+        await dispatch(getAllRating())
       }
     } catch (error) {
       setError("Error submitting rating. Please try again.");
@@ -52,10 +52,9 @@ const RatingAndVotingForm = ({ foodId }: { foodId: string | undefined }) => {
     setError("");
     setSuccess("");
     try {
-      const action = await dispatch(addVote({  votesType }));
-      if (addVote.fulfilled.match(action)) {
-        setSuccess("Vote submitted successfully!");
-        await dispatch(getTotalVote());
+      const response = await axiosInstance.post(`/food/${id}/voting`, votesType)
+      if(response.status === 201){
+        await dispatch(getTotalVote())
       }
     } catch (error) {
       setError("Error submitting vote. Please try again.");

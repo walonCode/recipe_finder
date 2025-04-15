@@ -17,7 +17,7 @@ const initialState:RatingSlice = ratingAdaptor.getInitialState({
 
 export const getAllRating = createAsyncThunk('rating/getAllFoodRating', async (_,{ rejectWithValue }) => {
     try{
-        const response = await axiosInstance.get(`/ratings`)
+        const response = await axiosInstance.get(`/rating`)
         return response.data.data as Rating[]
     }catch(error){
         console.error(error)
@@ -27,7 +27,7 @@ export const getAllRating = createAsyncThunk('rating/getAllFoodRating', async (_
 
 export const deleteRating = createAsyncThunk('rating/deleteRating', async (id:string,{ rejectWithValue }) => {
     try{
-        const response = await axiosInstance.delete(`/ratings/${id}`)
+        const response = await axiosInstance.delete(`/rating/${id}`)
         return response.data.data as {id: string}
     }catch(error){
         console.error(error)

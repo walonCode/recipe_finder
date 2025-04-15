@@ -1,4 +1,4 @@
-import {model,Schema, Document} from 'mongoose';
+import {model,Schema, Document, models} from 'mongoose';
 
 interface Step extends Document {
     foodId: string | undefined
@@ -28,6 +28,6 @@ const stepsSchema = new Schema<Step>({
     }
 },{ timestamps:true });
 
-const Step = model('step', stepsSchema);  
+const Step = models.step ||  model('step', stepsSchema);  
 
 export default Step

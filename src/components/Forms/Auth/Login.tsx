@@ -33,9 +33,10 @@ export default function Login() {
     e.preventDefault()
    try{
     setIsLoading(true)
-    const response = await axiosInstance.post('/users/login',{username,password})
+    const response = await axiosInstance.post('/auth/login',{username,password})
     if(response.status === 200){
       console.log(response.data.data.userToken)
+      console.log(response.data.data.sessionToken)
       dispatch(login({userToken:response.data.data.userToken as string,sessionToken:response.data.data.sessionToken as string }))
       router.push("/food")
     }

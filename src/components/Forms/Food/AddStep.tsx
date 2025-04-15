@@ -15,11 +15,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../../ui/dialog"
-import { addStep,getAllSteps } from "@/core/store/features/step/stepSlice"
+import { getAllSteps } from "@/core/store/features/step/stepSlice"
 import { useAppDispatch } from "@/core/hooks/storeHook"
 import { getAllFood } from "@/core/store/features/food/foodSlice"
+import { axiosInstance } from "@/core/api/axiosInstance"
 
-const AddStep = () => {
+const AddStep = ({id}:{id:string}) => {
   const [step, setStep] = useState<string[]>([""])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
@@ -57,12 +58,11 @@ const AddStep = () => {
     setSuccess("")
 
     try {
-      const action = await dispatch(addStep({step}))
-      if(addStep.fulfilled.match(action)){
-        setSuccess("Steps added successfully")
+      const response = await axiosInstance.post( `/food/${id}/step`, step)
+      if(response.status === 201){
         await dispatch(getAllSteps())
         await dispatch(getAllFood())
-        onClose()
+        setIsOpen(false)
       }
     } catch (error) {
       setError("Error adding steps. Please try again.")

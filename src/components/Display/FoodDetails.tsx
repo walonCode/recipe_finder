@@ -103,7 +103,7 @@ const FoodDetails = () => {
 
         {/* Sidebar - 1/3 width on medium screens and up */}
         <div className="space-y-6">
-          <RatingAndVotingForm foodId={id as string}/>
+          <RatingAndVotingForm id={id as string}/>
 
           <Card>
             <CardHeader>
@@ -148,7 +148,7 @@ const FoodDetails = () => {
 
       {/* Add Step Modal */}
       {isAddStepModalOpen && (
-        <AddStep/>
+        <AddStep id={id as string}/>
       )}
     </div>
   )

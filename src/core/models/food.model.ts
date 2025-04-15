@@ -1,4 +1,4 @@
-import {  model, Schema,Document } from "mongoose";
+import {  model, Schema,Document, models } from "mongoose";
 
 interface Food extends Document {
     name: string;
@@ -48,10 +48,9 @@ const foodSchema = new Schema<Food>({
     },
     image:{
         type:String,
-        required:true
     }
 },{ timestamps: true });
 
-const Food = model('food', foodSchema);
+const Food = models.food ||  model('food', foodSchema);
 
 export default Food
